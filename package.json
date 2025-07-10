@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
+    "@types/node": "^22.13.11",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.1.0",
+    "googleapis": "^150.0.1"
   }
 }

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      body { padding: 1.5rem; }
+      label { font-weight: bold; }
+      .btn-primary { width: 100%; font-size: 1.2rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h4>Etapa 1 de 2: Dados da Avaliação</h4>
+      <hr/>
+      <form id="formBloco1">
+
+        <div class="form-group">
+          <label for="nomeEmpresa">Identifique a sua Empresa:</label>
+          <select class="form-control" id="nomeEmpresa" name="nomeEmpresa" required>
+            <option value="">-- Selecione a Empresa --</option>
+            <option>HSLS</option>
+            <option>HSLN</option>
+            <option>HSLG</option>
+            <option>HSR</option>
+            <option>Ânima</option>
+            <option>HCMS</option>
+            <option>HSLT</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+              <label for="nomeAvaliador">Nome do avaliador:</label>
+              <input type="text" class="form-control" id="nomeAvaliador" name="nomeAvaliador" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="dataAvaliacao">Data da avaliação:</label>
+              <input type="date" class="form-control" id="dataAvaliacao" name="dataAvaliacao" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label for="setorAvaliado">Setor Avaliado:</label>
+          <select class="form-control" id="setorAvaliado" name="setorAvaliado" required>
+              <option value="">-- Selecione uma empresa primeiro --</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="numAtendimento">Nº de Atendimento:</label>
+                <input type="number" class="form-control" id="numAtendimento" name="numAtendimento" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="tipoProntuario">Tipo de prontuário:</label>
+                <select class="form-control" id="tipoProntuario" name="tipoProntuario" required>
+                    <option value="">-- Selecione --</option>
+                    <option>Retrospectivo/eletrônico</option><option>Prospectivo/físico</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label for="especialidade">Especialidade:</label>
+          <select class="form-control" id="especialidade" name="especialidade" required>
+            <option value="">-- Selecione uma empresa primeiro --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoAvaliacao">Tipo de avaliação:</label>
+          <select class="form-control" id="tipoAvaliacao" name="tipoAvaliacao" required>
+            <option value="">-- Selecione --</option>
+            <option value="Clinico">Clínico</option>
+            <option value="Cirurgico">Cirúrgico</option>
+            <option value="Fonoaudiologia">Fonoaudiologia</option>
+            <option value="Fisioterapia">Fisioterapia</option>
+          </select>
+        </div>
+
+        <hr/>
+        <button type="button" class="btn btn-primary" id="btnProximo" onclick="irParaProximaEtapa()">Próximo <span style="font-size: 1.5rem;">&rarr;</span></button>
+      </form>
+    </div>
+
+    <script>
+      // Função que atualiza os dropdowns de Setor e Especialidade
+      async function atualizarOpcoes() {
+        const empresaSelect = document.getElementById('nomeEmpresa');
+        const setorSelect = document.getElementById('setorAvaliado');
+        const especialidadeSelect = document.getElementById('especialidade');
+        const empresaSelecionada = empresaSelect.value;
+
+        // Limpa as listas atuais e mostra uma mensagem de carregamento
+        setorSelect.innerHTML = '<option value="">-- Carregando... --</option>';
+        especialidadeSelect.innerHTML = '<option value="">-- Carregando... --</option>';
+        setorSelect.disabled = true;
+        especialidadeSelect.disabled = true;
+
+        if (!empresaSelecionada) {
+          setorSelect.innerHTML = '<option value="">-- Selecione uma empresa primeiro --</option>';
+          especialidadeSelect.innerHTML = '<option value="">-- Selecione uma empresa primeiro --</option>';
+          return;
+        }
+
+        try {
+          // Busca as novas opções no nosso servidor, passando a empresa selecionada
+          const response = await fetch(`/api/get-options?empresa=${encodeURIComponent(empresaSelecionada)}`);
+          if (!response.ok) {
+            throw new Error('Falha ao buscar dados do servidor');
+          }
+          const options = await response.json();
+
+          // Preenche o dropdown de Setor Avaliado
+          setorSelect.innerHTML = '<option value="">-- Selecione --</option>';
+          options.setores.forEach(setor => {
+            const option = document.createElement('option');
+            option.value = setor;
+            option.textContent = setor;
+            setorSelect.appendChild(option);
+          });
+
+          // Preenche o dropdown de Especialidade
+          especialidadeSelect.innerHTML = '<option value="">-- Selecione --</option>';
+          options.especialidades.forEach(especialidade => {
+            const option = document.createElement('option');
+            option.value = especialidade;
+            option.textContent = especialidade;
+            especialidadeSelect.appendChild(option);
+          });
+
+          setorSelect.disabled = false;
+          especialidadeSelect.disabled = false;
+
+        } catch (error) {
+          console.error('Erro ao atualizar opções:', error);
+          setorSelect.innerHTML = '<option value="">-- Erro ao carregar --</option>';
+          especialidadeSelect.innerHTML = '<option value="">-- Erro ao carregar --</option>';
+        }
+      }
+
+      // Adiciona o "escutador" de eventos que chama a função acima sempre que a empresa é trocada
+      document.getElementById('nomeEmpresa').addEventListener('change', atualizarOpcoes);
+
+      // Função para ir para a próxima etapa (a mesma que já funcionava)
+      function irParaProximaEtapa() {
+        const form = document.getElementById('formBloco1');
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const btn = document.getElementById('btnProximo');
+        btn.disabled = true;
+        btn.innerHTML = 'Carregando...';
+
+        const formData = new FormData(form);
+        const dadosPagina1 = Object.fromEntries(formData.entries());
+
+        sessionStorage.setItem('dadosPagina1', JSON.stringify(dadosPagina1));
+
+        window.location.href = 'Pagina2_Template.html';
+      }
+    </script>
+  </body>
+</html>
