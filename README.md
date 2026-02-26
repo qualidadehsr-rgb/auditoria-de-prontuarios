@@ -1,59 +1,68 @@
-#  Sistema de Auditoria de Prontuários
+# Sistema de Auditoria de Prontuários (Data Architecture & App)
 
-Aplicação web para a realização e gerenciamento de auditorias de prontuários hospitalares, com suporte para múltiplas empresas e painéis de visualização de dados.
+Um ecossistema completo (App Web + API + Data Warehouse + BI) construído para resolver o desafio de escalabilidade na auditoria de milhares de prontuários hospitalares simultâneos, transformando dados qualitativos e quantitativos em inteligência de negócio.
 
-![Screenshot do Dashboard]([https://i.imgur.com/G4fBq3G.png](https://lookerstudio.google.com/u/2/reporting/dad1bfa4-40d9-43e0-a4b1-78d259fbd842/page/EdiQF))
+## O Problema (Contexto do Negócio)
 
+A auditoria clínica exige a avaliação minuciosa de mais de 600 itens por prontuário (desde a triagem até planos terapêuticos complexos). Originalmente, esses dados eram salvos em uma única aba de planilha. Com o aumento do volume de auditorias, o projeto esbarrou no clássico **"Wide Table Problem" (Problema da Tabela Larga)**:
 
----
+* Painéis no Looker Studio sofriam com alta latência ao ler centenas de colunas simultaneamente.
+* As "Observações" (textos abertos dos médicos) ficavam isoladas em colunas específicas, impossibilitando cruzamentos ágeis com as não conformidades.
+* Risco elevado de concorrência e perda de dados com múltiplos auditores salvando registros no mesmo instante.
 
-## ✨ Funcionalidades
+## A Solução e Arquitetura
 
-* **Formulário Customizado:** Interface em duas etapas com design limpo para facilitar o preenchimento.
-* **Suporte Multi-Empresa:** Permite que usuários de diferentes empresas do grupo utilizem o mesmo formulário.
-* **Listas Dinâmicas:** Os campos de "Setor" e "Especialidade" são carregados dinamicamente com base na empresa selecionada.
-* **Armazenamento Seguro:** Os dados são salvos de forma segura em uma Planilha Google, que funciona como banco de dados central.
-* **Acesso Concorrente:** Múltiplos usuários podem preencher e salvar avaliações simultaneamente sem conflito de dados.
-* **Dashboards de Gestão:** Painéis interativos criados no Looker Studio para visualização e análise dos dados, com filtros por empresa, ano e mês.
-* **Disponibilidade Contínua:** A aplicação é hospedada no Render.com, garantindo que o formulário esteja sempre acessível para os usuários.
+Desenvolvi uma API robusta e migrei a camada de armazenamento para um Data Warehouse corporativo, normalizando os dados para garantir performance analítica e escalabilidade.
 
----
-## 💻 Tecnologias Utilizadas
+### Diagrama de Arquitetura
 
-* **Front-End:** HTML5, CSS3, Bootstrap 4, JavaScript (Fetch API, DOM)
-* **Back-End:** Node.js, Express.js
-* **Banco de Dados:** Google Sheets API v4
-* **Hospedagem & Deploy:** Render.com (conectado ao GitHub)
-* **Dashboards:** Google Looker Studio
-* **Autenticação da API:** Google Cloud Service Account (OAuth 2.0)
+```mermaid
+graph TD
+    A[Front-End \n HTML/JS Vanilla] -->|Payload JSON| B(API Node.js/Express)
+    B -->|Autenticação OAuth| C{Google Cloud IAM}
+    C -->|Validação| B
+    B -->|Streaming Insert| D[(Google BigQuery \n Data Warehouse)]
+    D -->|Tabela: respostas| E[Looker Studio \n Dashboards]
+    D -->|Tabela: detalhes_respostas| E
+```
+1. **Front-end Dinâmico**: Formulário web reativo. As listas de parametrização (Setores e Especialidades) são consumidas em tempo real do banco de dados via API REST (GET).
 
----
+2. **Back-end & API (Node.js/Express)**: Uma API assíncrona que recebe o payload do front-end, gera chaves únicas (UUIDv4) e gerencia as regras de negócio. Implementa o padrão Fail Fast para conexões de banco de dados.
 
-## 📂 Estrutura do Projeto
+3. **Data Warehouse (Google BigQuery)**: Modelagem de dados relacional desenhada especificamente para alta performance no BI.
 
-A estrutura principal do código está organizada da seguinte forma:
-/
-├── public/                 # Contém os arquivos do front-end (o que o usuário vê)
-│   ├── index.html          # Página 1 do formulário (coleta de dados iniciais)
-│   └── Pagina2_Template.html # Página 2 do formulário (questionários dinâmicos)
-├── index.js                # O servidor back-end (escrito em Express)
-├── package.json            # Define as dependências e scripts do projeto Node.js
-└── ...
-
-## 🚀 Configuração e Instalação
-
-Para replicar este projeto, os seguintes passos são necessários:
-
-1.  **Google Sheets:** Criar uma planilha para ser o banco de dados ("Master_Respostas") e uma aba para as listas dinâmicas ("Configuracao").
-2.  **Google Cloud Platform:**
-    * Criar um novo projeto.
-    * Ativar a API do Google Sheets.
-    * Criar uma Conta de Serviço com papel de "Editor" e baixar a chave de credenciais em formato JSON.
-3.  **Compartilhamento:** Compartilhar a Planilha Google com o e-mail da Conta de Serviço criada.
-4.  **Variáveis de Ambiente:** Configurar uma variável de ambiente chamada `GOOGLE_CREDENTIALS` na plataforma de hospedagem (Render, Replit, etc.) e colar o conteúdo completo do arquivo JSON como seu valor.
-5.  **Instalação de Dependências:** Rodar o comando `npm install` para instalar as bibliotecas (Express, googleapis, etc.).
-6.  **Execução:** Rodar o comando `node index.js` para iniciar o servidor.
+4. **Data Visualization (Looker Studio)**: Dashboards gerenciais otimizados, filtrando conformidades e observações textuais em milissegundos.
 
 ---
 
-Feito com ❤️ por **Ediney Junior**.
+## Modelagem de Dados e Normalização
+Em vez de persistir 600 colunas fixas, a API intercepta o payload e realiza o Unpivot dos dados em tempo real usando a BigQuery Streaming API, dividindo as informações em duas entidades relacionais:
+- **Tabela** `respostas` **(Cabeçalho)**: 1 linha por auditoria. Armazena os metadados principais (Quem auditou, Setor avaliado, Data, Número do Atendimento).
+- **Tabela** `detalhes_respostas` **(EAV Model - Entity-Attribute-Value)**: Registros verticais vinculados via Foreign Key (ID da auditoria). Se o auditor preencher 40 itens, a API gera 40 linhas estruturadas.
+    - **Impacto**: Consultas SQL tornaram-se modulares. O Looker Studio agora processa filtros complexos de forma instantânea.
+
+---
+
+## Tecnologias Utilizadas
+- **Back-end**: Node.js, Express.js, UUID, dotenv.
+- **Banco de Dados / DW**: Google BigQuery (Streaming API).
+- **Segurança**: Autenticação via Google Cloud Service Account (JSON/OAuth) isolada em variáveis de ambiente.
+- **Front-end**: HTML5, CSS3, Bootstrap 4, JS Vanilla (Fetch API).
+- **Data Visualization / BI**: Google Looker Studio.
+- **Hospedagem & CI/CD**: Render.com.
+
+---
+
+## Métricas de Impacto e Valor
+- **Performance do BI**: Fim da latência no Looker Studio ao mudar o paradigma de colunamento para um modelo tabular vertical (Long Data).
+- **Integridade de Dados**: Eliminação da perda de dados em acessos concorrentes através da arquitetura distribuída do BigQuery.
+- **Análise Qualitativa**: Consolidação das observações médicas nos relatórios, permitindo a criação de planos de ação baseados em causa-raiz (ex: identificar exatamente o motivo de falha em um protocolo de profilaxia).
+
+---
+
+## Próximos Passos (Roadmap)
+- [ ] Desativar a escrita dupla (Dual-write) legada no Google Sheets após a fase de homologação dos dados no BigQuery.
+
+- [ ] Implementar logs de aplicação estruturados (ex: bibliotecas Winston/Morgan).
+
+- [ ] Desenvolver testes unitários para a validação do payload na API.
