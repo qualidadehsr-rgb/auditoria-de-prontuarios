@@ -97,13 +97,9 @@
         return response.json();
       })
       .then(data => {
-        alert(data.message);
-        if (data.message.startsWith("✅")) {
-          window.location.href = "/";
-        } else {
-          btn.disabled = false;
-          btn.innerHTML = 'Salvar Avaliação Completa';
-        }
+        alert(data.message); //Mostrar o pop-up de sucesso
+        sessionStorage.clear(); // Limpa as respostas da memória do navegador
+        window.location.href = 'index.html'; // Redireciona para a primeira tela
       })
       .catch(error => {
         console.error('Erro de comunicação:', error);
