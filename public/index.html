@@ -4,13 +4,19 @@
     <base target="_top">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-      body { padding: 1.5rem; }
+      body { padding: 1.5rem; background-color:rgb(250, 246, 246)}
       label { font-weight: bold; }
-      .btn-primary { width: 100%; font-size: 1.2rem; }
+      .btn-primary { width: 100%; font-size: 1.2rem; background-color:brown; border-color:brown}
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="mb-4 mt-3">
+        <div class="text-left">
+          <img src="logo.png" alt="Logo da Empresa" style="max-height: 90px;">
+        </div>
+        <h1 class="mt-3 text-center" style="color: #004085; font-weight: bold;">Auditoria de Prontuários</h1>
+      </div>
       <h4>Etapa 1 de 2: Dados da Avaliação</h4>
       <hr/>
       <form id="formBloco1">
@@ -50,7 +56,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="numAtendimento">Nº de Atendimento:</label>
-                <input type="number" class="form-control" id="numAtendimento" name="numAtendimento" required>
+                <input type="number" min="0" class="form-control" id="numAtendimento" name="numAtendimento" required>
             </div>
             <div class="form-group col-md-6">
                 <label for="tipoProntuario">Tipo de prontuário:</label>
@@ -88,6 +94,8 @@
     </div>
 
     <script>
+      document.getElementById('dataAvaliacao').max = new Date().toISOString().split('T')[0];
+
       // Função que atualiza os dropdowns de Setor e Especialidade
       async function atualizarOpcoes() {
         const empresaSelect = document.getElementById('nomeEmpresa');
