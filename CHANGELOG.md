@@ -5,6 +5,19 @@ Todos os aspectos notáveis de alterações a este projeto serão documentados n
 O formato baseia-se no standard [Keep a Changelog](https://keepachangelog.com/),
 e este projeto adere à [Versionação Semântica](https://semver.org/).
 
+## [1.3.0] - 2026-03-05
+
+### Adicionado
+- Pipeline de ETL automatizado construído em Python e Polars para extração em lote do histórico legado no Google Sheets.
+- Orquestração de CI/CD via GitHub Actions (`etl.yml`), com *cron jobs* programados para rodar rotinas de extração diárias às 06h, 12h e 18h (Horário de Cuiabá).
+- Adoção da Arquitetura Medalhão (*Medallion Architecture*), criando a tabela `bronze_legado_respostas` no Google BigQuery para armazenamento imutável dos dados brutos.
+- Criação do `ADR 004` documentando a adoção do ecossistema Python/Polars e a separação do pipeline analítico.
+
+### Alterado
+- Reestruturação da documentação arquitetural corporativa: os ADRs foram migrados do arquivo principal para a pasta dedicada `docs/adr/`.
+- Atualização do `pull_request_template` para contemplar checklists de Engenharia de Dados, CI/CD e validação de scripts Python.
+- O `ARCHITECTURE.md` foi reescrito para refletir a nova natureza poliglota do monorepo (Node.js para ambiente transacional em tempo real e Python para processamento em lote).
+
 ## [1.2.0] - 2026-03-04
 
 ### Adicionado

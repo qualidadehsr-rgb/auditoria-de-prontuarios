@@ -1,45 +1,51 @@
-# Documento de Arquitetura e Decisões (ADR)
+# Arquitetura do Sistema de Auditoria de Prontuários
 
-Este documento registra as principais decisões arquiteturais tomadas durante o desenvolvimento e evolução do Sistema de Auditoria de Prontuários. O formato segue o padrão de Architecture Decision Records (ADRs) para fornecer contexto histórico aos futuros mantenedores do projeto.
+Este documento fornece a visão geral de alto nível dos componentes do sistema, seus fluxos de dados e a infraestrutura tecnológica que suporta a operação de auditoria e análise de negócios.
 
-## Visão Geral do Sistema
 
-O sistema opera em uma arquitetura de três camadas tradicionais (Client, Server, Database), com foco em processamento assíncrono e modelagem orientada a Analytics (OLAP).
 
-1. **Camada de Apresentação (Client):** Renderização estática servida via Express. O cliente gerencia o estado do formulário e se comunica via chamadas RESTful.
-2. **Camada de Aplicação (Server):** Node.js atuando como um middleware de integração. Responsável por sanitização, transformação de payload (JSON para modelo relacional) e injeção no Data Warehouse.
-3. **Camada de Dados (Database):** Google BigQuery atuando como repositório centralizado, alimentando os dashboards no Looker Studio.
+## 1. Visão Geral do Sistema
+
+O ecossistema foi desenhado para resolver o problema de colunas excessivas (Wide Table Problem) e concorrência de acessos, dividindo a responsabilidade em duas frentes de ingestão de dados que convergem para um Data Warehouse central.
+
+O sistema opera sob as seguintes camadas:
+- **Client (Apresentação):** Aplicação web otimizada.
+- **Transactional Server (API):** Backend Node.js responsável pelas novas auditorias em tempo real.
+- **Data Pipeline (ETL):** Automação em Python responsável pela ingestão em lote de dados legados.
+- **Data Warehouse:** Armazenamento analítico no Google BigQuery.
+- **Business Intelligence:** Camada de visualização e relatórios.
 
 ---
 
-## Registros de Decisões Arquiteturais (ADRs)
+## 2. Componentes e Tecnologias
 
-### ADR 001: Migração do Armazenamento (Google Sheets para Google BigQuery)
+### 2.1. Ingestão em Tempo Real (Transacional)
+Responsável por captar os dados preenchidos ativamente pelos auditores no sistema.
+* **Front-End:** Renderização estática (HTML/JS Vanilla) servida via Express. Gerencia o estado do formulário e faz requisições RESTful.
+* **API (Node.js / Express):** Atua como middleware. Realiza sanitização, gera identificadores únicos (UUIDv4) e executa o *Unpivot* do payload JSON para o padrão EAV (Entity-Attribute-Value).
+* **Conexão de Banco:** Utiliza a BigQuery Streaming API para inserção imediata e assíncrona. Possui padrão "Fail Fast" na inicialização.
 
-* **Data:** Fevereiro de 2026
-* **Status:** Aceito e Implementado
-* **Contexto:** A versão inicial (MVP) utilizava a API v4 do Google Sheets como banco de dados. Com a escala do projeto, enfrentamos problemas de concorrência (condições de corrida ao salvar registros simultâneos) e limitações severas de performance na leitura dos dados pelo Looker Studio devido ao formato tabular horizontal (mais de 600 colunas).
-* **Decisão:** Migrar a camada de persistência definitiva para o Google BigQuery, mantendo temporariamente o Google Sheets em regime de escrita dupla (Dual-write) apenas para contingência (fase de homologação).
-* **Consequências (Trade-offs):**
-  * *Positivo:* Capacidade de escalabilidade infinita, fim dos bloqueios de concorrência e integração nativa otimizada com o Looker Studio.
-  * *Negativo:* Curva de aprendizado maior para novos desenvolvedores, introdução do conceito de "Consistência Eventual" (Streaming Buffer), e necessidade de gerenciamento rigoroso de credenciais (GCP IAM).
+### 2.2. Ingestão em Lote (Data Engineering / ETL)
+Responsável por garantir a preservação histórica e sincronização de dados lançados via planilhas legadas.
+* **Extrator (Python):** Script de orquestração rodando de forma isolada (`etl/extracao_sheets.py`).
+* **Processamento (Polars):** Utilizado para manipulação de matrizes de dados na memória RAM (virtualização via `BytesIO`), garantindo conversão de tipos (Schema Enforcement) e preenchimento de nulos (Shape Errors).
+* **Orquestração (GitHub Actions):** Pipeline de CI/CD configurado para rodar em fuso horário específico (06h, 12h e 18h) acionando servidores Linux temporários (Ubuntu).
 
-### ADR 002: Modelagem de Dados Vertical (Padrão EAV)
+### 2.3. Data Warehouse & BI
+* **Armazenamento (Google BigQuery):** Repositório centralizado.
+  * *Camada Bronze:* Dados brutos (`bronze_legado_respostas`).
+  * *Camada Silver/Gold:* Dados relacionais estruturados (`respostas`, `detalhes_respostas`).
+* **Visualização (Looker Studio):** Dashboards conectados nativamente ao BigQuery, operando sem latência analítica.
 
-* **Data:** Fevereiro de 2026
-* **Status:** Aceito e Implementado
-* **Contexto:** O formulário de auditoria possui perguntas dinâmicas e opcionais. Salvar todas as 600 possíveis respostas como colunas (Wide Table) gerava dados esparsos (muitos valores nulos) e dificultava agregações no BI.
-* **Decisão:** Adotar uma variação do modelo EAV (Entity-Attribute-Value). A carga foi dividida em duas tabelas físicas: `respostas` (metadados do evento da auditoria) e `detalhes_respostas` (itens granulares contendo o par pergunta/resposta e observações).
-* **Consequências (Trade-offs):**
-  * *Positivo:* Eliminação do problema da tabela larga, flexibilidade para adicionar novas perguntas no formulário sem precisar alterar o esquema (Schema) do banco de dados, e melhora dramática no tempo de resposta das consultas analíticas.
-  * *Negativo:* Necessidade de lógicas de "Unpivot" no back-end (Node.js) antes de inserir os dados via Streaming API, aumentando ligeiramente a complexidade da Rota POST.
+---
 
-### ADR 003: Inicialização da Aplicação com Padrão "Fail Fast"
+## 3. Registros de Decisões Arquiteturais (ADRs)
 
-* **Data:** Fevereiro de 2026
-* **Status:** Aceito e Implementado
-* **Contexto:** Serviços em nuvem podem falhar silenciosamente se variáveis de ambiente ou credenciais estiverem incorretas ou ausentes.
-* **Decisão:** O servidor Node.js deve tentar carregar e parsear as credenciais do BigQuery antes de abrir a porta de escuta HTTP. Caso a credencial seja inválida, a aplicação invoca um `process.exit(1)`.
-* **Consequências (Trade-offs):**
-  * *Positivo:* Evita que a aplicação suba em um estado degradado, impedindo que o usuário preencha uma auditoria inteira para só no final descobrir que o banco de dados está inacessível.
-  * *Negativo:* O container da aplicação não iniciará caso a injeção de secrets da plataforma de hospedagem (Render) falhe.
+Todas as mudanças estruturais, trade-offs e decisões técnicas tomadas ao longo do projeto estão documentadas individualmente. 
+
+Para entender o contexto de "por que" certas tecnologias ou padrões foram escolhidos, consulte a pasta [`docs/adr/`](./docs/adr/):
+
+* [ADR 0001: Migração do Armazenamento (Sheets para BigQuery)](./docs/adr/0001-migracao-bigquery.md)
+* [ADR 0002: Modelagem de Dados Vertical (Padrão EAV)](./docs/adr/0002-modelagem-eav.md)
+* [ADR 0003: Inicialização da Aplicação com Padrão "Fail Fast"](./docs/adr/0003-fail-fast.md)
+* [ADR 0004: Adoção da Arquitetura Medalhão e Ingestão com Python](./docs/adr/0004-arquitetura-medalhao-etl.md)

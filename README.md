@@ -4,65 +4,64 @@ Um ecossistema completo (App Web + API + Data Warehouse + BI) construído para r
 
 ## O Problema (Contexto do Negócio)
 
-A auditoria clínica exige a avaliação minuciosa de mais de 600 itens por prontuário (desde a triagem até planos terapêuticos complexos). Originalmente, esses dados eram salvos em uma única aba de planilha. Com o aumento do volume de auditorias, o projeto esbarrou no clássico **"Wide Table Problem" (Problema da Tabela Larga)**:
-
-* Painéis no Looker Studio sofriam com alta latência ao ler centenas de colunas simultaneamente.
-* As "Observações" (textos abertos dos médicos) ficavam isoladas em colunas específicas, impossibilitando cruzamentos ágeis com as não conformidades.
-* Risco elevado de concorrência e perda de dados com múltiplos auditores salvando registros no mesmo instante.
+A auditoria clínica exige a avaliação minuciosa de mais de 600 itens por prontuário. Originalmente, esses dados eram salvos de forma plana em uma única aba de planilha do Google Sheets. Com a escala do projeto, esbarramos em limitações críticas:
+* **"Wide Table Problem":** Painéis no Looker Studio sofriam com alta latência (ou quebravam) ao tentar ler centenas de colunas simultaneamente.
+* **Perda de Dados (Concorrência):** Risco elevado de sobrescrita com múltiplos auditores salvando registros no mesmo instante.
+* **Silos Qualitativos:** As "Observações" médicas ficavam isoladas em colunas específicas, dificultando cruzamentos de causa-raiz para não conformidades.
 
 ## A Solução e Arquitetura
 
-Desenvolvi uma API robusta e migrei a camada de armazenamento para um Data Warehouse corporativo, normalizando os dados para garantir performance analítica e escalabilidade.
-
-### Diagrama de Arquitetura
+Desenvolvi uma arquitetura híbrida dividida em duas frentes de ingestão que convergem para um Data Warehouse corporativo (Google BigQuery), aplicando o conceito de **Arquitetura Medalhão (Medallion Architecture)** e modelagem orientada a Analytics (OLAP).
 
 ```mermaid
 graph TD
-    A[Front-End \n HTML/JS Vanilla] -->|Payload JSON| B(API Node.js/Express)
-    B -->|Autenticação OAuth| C{Google Cloud IAM}
-    C -->|Validação| B
-    B -->|Streaming Insert| D[(Google BigQuery \n Data Warehouse)]
-    D -->|Tabela: respostas| E[Looker Studio \n Dashboards]
-    D -->|Tabela: detalhes_respostas| E
+    %% Transacional / Real-time
+    A[Front-End Web] -->|Payload JSON| B(API Node.js/Express)
+    B -->|Unpivot & Validação| C[(BigQuery: Tabelas Silver/Gold)]
+    
+    %% Engenharia de Dados / Batch
+    D[Planilhas Legadas] -->|Extração Bruta| E(ETL Python + Polars)
+    E -->|Tratamento de Matriz na RAM| F[(BigQuery: Camada Bronze)]
+    
+    %% Orquestração e BI
+    G((GitHub Actions\nCron: 06h, 12h, 18h)) -->|Aciona| E
+    C --> H[Looker Studio Dashboards]
+    F --> H
 ```
-1. **Front-end Dinâmico**: Formulário web reativo. As listas de parametrização (Setores e Especialidades) são consumidas em tempo real do banco de dados via API REST (GET).
 
-2. **Back-end & API (Node.js/Express)**: Uma API assíncrona que recebe o payload do front-end, gera chaves únicas (UUIDv4) e gerencia as regras de negócio. Implementa o padrão Fail Fast para conexões de banco de dados.
+## Destaques da Engenharia (Ponta a Ponta)
+1. **ETL em Lote e Orquestração (Python/Polars)**: - Script de extração que resolve Shape Errors (linhas irregulares) na memória RAM usando `Polars` e `BytesIO`.
+    - Pipeline de CI/CD automatizado com **GitHub Actions**, rodando instâncias efêmeras em Linux três vezes ao dia (06h, 12h e 18h) para garantir a integridade da camada `bronze_legado_respostas`.
 
-3. **Data Warehouse (Google BigQuery)**: Modelagem de dados relacional desenhada especificamente para alta performance no BI.
+2. **API Real-Time e Tratamento de Erros (Node.js)**: - Backend operando com o padrão ***Fail Fast*** (valida credenciais antes de subir o servidor).
+    - Intercepta o payload do front-end e realiza o Unpivot dos dados em tempo real usando a BigQuery Streaming API.
 
-4. **Data Visualization (Looker Studio)**: Dashboards gerenciais otimizados, filtrando conformidades e observações textuais em milissegundos.
-
----
-
-## Modelagem de Dados e Normalização
-Em vez de persistir 600 colunas fixas, a API intercepta o payload e realiza o Unpivot dos dados em tempo real usando a BigQuery Streaming API, dividindo as informações em duas entidades relacionais:
-- **Tabela** `respostas` **(Cabeçalho)**: 1 linha por auditoria. Armazena os metadados principais (Quem auditou, Setor avaliado, Data, Número do Atendimento).
-- **Tabela** `detalhes_respostas` **(EAV Model - Entity-Attribute-Value)**: Registros verticais vinculados via Foreign Key (ID da auditoria). Se o auditor preencher 40 itens, a API gera 40 linhas estruturadas.
-    - **Impacto**: Consultas SQL tornaram-se modulares. O Looker Studio agora processa filtros complexos de forma instantânea.
-
----
-
-## Tecnologias Utilizadas
-- **Back-end**: Node.js, Express.js, UUID, dotenv.
-- **Banco de Dados / DW**: Google BigQuery (Streaming API).
-- **Segurança**: Autenticação via Google Cloud Service Account (JSON/OAuth) isolada em variáveis de ambiente.
-- **Front-end**: HTML5, CSS3, Bootstrap 4, JS Vanilla (Fetch API).
-- **Data Visualization / BI**: Google Looker Studio.
-- **Hospedagem & CI/CD**: Render.com.
-
----
+3. **Modelagem de Dados (SQL)**: - Adoção do modelo **EAV (Entity-Attribute-Value)**. Em vez de 600 colunas, o banco armazena dados em duas tabelas relacionais (`respostas` para metadados e `detalhes_respostas` para granularidade).
 
 ## Métricas de Impacto e Valor
-- **Performance do BI**: Fim da latência no Looker Studio ao mudar o paradigma de colunamento para um modelo tabular vertical (Long Data).
-- **Integridade de Dados**: Eliminação da perda de dados em acessos concorrentes através da arquitetura distribuída do BigQuery.
-- **Análise Qualitativa**: Consolidação das observações médicas nos relatórios, permitindo a criação de planos de ação baseados em causa-raiz (ex: identificar exatamente o motivo de falha em um protocolo de profilaxia).
+- **Performance do BI**: Fim da latência no Looker Studio ao mudar o paradigma de colunamento horizontal para um modelo tabular vertical estruturado.
+- **Integridade de Dados**: Eliminação da perda de dados por acessos concorrentes através da arquitetura distribuída.
+- **Governança**: Separação clara entre dados brutos (Bronze) e dados modelados (Silver/Gold), permitindo auditoria histórica sem impactar o sistema em produção.
 
----
+## Tecnologias Utilizadas
+- **Engenharia de Dados**: Python 3.11, Polars, Google BigQuery.
+- **Engenharia de Software (API/Web)**: Node.js, Express.js, JS Vanilla, HTML5/CSS3.
+- **Orquestração & CI/CD**: GitHub Actions (Cron Jobs), Git/GitHub (Conventional Commits).
+- **Segurança**: Google Cloud IAM (Service Accounts), `.env` para gestão de secrets.
+- **Data Visualization**: Looker Studio.
+
+## Documentação e Decisões
+Este projeto adota o padrão de **Architecture Decision Records (ADRs)** para rastreabilidade de decisões técnicas. Acesse o histórico na pasta `docs/adr/`.
+Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Changelog](./CHANGELOG.md).
 
 ## Próximos Passos (Roadmap)
-- [ ] Desativar a escrita dupla (Dual-write) legada no Google Sheets após a fase de homologação dos dados no BigQuery.
+[ ] Construir as transformações SQL na Camada Silver no BigQuery para limpeza das tipagens (datas e categorias) dos dados da Camada Bronze.
 
-- [ ] Implementar logs de aplicação estruturados (ex: bibliotecas Winston/Morgan).
+[ ] Implementar logs de aplicação estruturados na API (ex: Winston/Morgan).
 
-- [ ] Desenvolver testes unitários para a validação do payload na API.
+[ ] Desenvolver testes unitários para a validação do payload do formulário.
+
+
+## Desenvolvido por:
+### Ediney Magalhães
+- Analytics Engineer / Data Engineer / Estatistico
