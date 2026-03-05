@@ -131,3 +131,8 @@ dist
 
 # Replit debugger
 .breakpoints
+
+# Python / ETL
+venv/
+__pycache__/
+*.pyc
