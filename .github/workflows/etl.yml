@@ -3,7 +3,7 @@ name: Carga automatica
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '0 10,16,22  * * *'
 
 jobs:
   meu_robo_etl:
