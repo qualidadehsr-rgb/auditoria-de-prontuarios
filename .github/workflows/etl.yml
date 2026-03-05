@@ -1,0 +1,30 @@
+name: Carga automatica
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *'
+
+jobs:
+  meu_robo_etl:
+    runs-on: ubuntu-latest
+
+    steps:
+    #baixar codigo no servidor
+      - name: Baixar o repositorio
+        uses: actions/checkout@v4
+    #instalar python no servidor
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+            
+    #lista de requirements
+      - name: Instalar Bibliotecas
+        run: pip install -r requirements.txt
+
+    #rodar extracao
+      - name: Rodar o Extrator
+        env: 
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python etl/extracao_sheets.py
