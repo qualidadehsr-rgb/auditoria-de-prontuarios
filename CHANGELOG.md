@@ -5,6 +5,13 @@ Todos os aspectos notáveis de alterações a este projeto serão documentados n
 O formato baseia-se no standard [Keep a Changelog](https://keepachangelog.com/),
 e este projeto adere à [Versionação Semântica](https://semver.org/).
 
+## [1.2.0] - 2026-03-04
+
+### Adicionado
+- Implementação de identidade visual no front-end da aplicação web.
+- Padronização da paleta de cores com `CSS` na tela de fundo e nos botões.
+- Criação de travas de segurança de UX em campos de inserção de datas.
+
 ## [1.1.0] - 2026-02-26
 
 ### Adicionado
