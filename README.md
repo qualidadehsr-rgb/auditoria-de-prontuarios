@@ -38,6 +38,9 @@ graph TD
 
 3. **Modelagem de Dados (SQL)**: - Adoção do modelo **EAV (Entity-Attribute-Value)**. Em vez de 600 colunas, o banco armazena dados em duas tabelas relacionais (`respostas` para metadados e `detalhes_respostas` para granularidade).
 
+4. **Processamento Silver (Automático e Upsert)**: 
+    - A consolidação dos dados da camada Bronze para a Silver (tabela `respostas`) é feita através de uma **Scheduled Query no BigQuery**. O script executa um `MERGE` a cada 6 horas, garantindo deduplicação e limpeza (Data Cleansing) sem intervenção manual.
+
 ## Métricas de Impacto e Valor
 - **Performance do BI**: Fim da latência no Looker Studio ao mudar o paradigma de colunamento horizontal para um modelo tabular vertical estruturado.
 - **Integridade de Dados**: Eliminação da perda de dados por acessos concorrentes através da arquitetura distribuída.
@@ -55,7 +58,9 @@ Este projeto adota o padrão de **Architecture Decision Records (ADRs)** para ra
 Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Changelog](./CHANGELOG.md).
 
 ## Próximos Passos (Roadmap)
-[ ] Construir as transformações SQL na Camada Silver no BigQuery para limpeza das tipagens (datas e categorias) dos dados da Camada Bronze.
+[x] Construir as transformações SQL na Camada Silver no BigQuery para limpeza das tipagens (datas e categorias) dos dados da Camada Bronze.
+
+[ ] Desenvolver script de UNPIVOT no BigQuery para transformar as 400+ colunas de perguntas da Camada Bronze em formato tabular longo (EAV) na tabela `detalhes_respostas`.
 
 [ ] Implementar logs de aplicação estruturados na API (ex: Winston/Morgan).
 

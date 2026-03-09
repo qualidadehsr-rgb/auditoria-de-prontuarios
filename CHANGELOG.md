@@ -5,6 +5,12 @@ Todos os aspectos notáveis de alterações a este projeto serão documentados n
 O formato baseia-se no standard [Keep a Changelog](https://keepachangelog.com/),
 e este projeto adere à [Versionação Semântica](https://semver.org/).
 
+## [1.4.0] - 2026-03-09
+### Added
+- Implementação de rotina de UPSERT (`MERGE`) no script `etl/silver_cabecalho.sql` para consolidação do cabeçalho legado.
+- Regra de Data Cleansing na camada Silver (tratamento de nulos e remoção de duplicidades baseada na chave de unicidade ampliada).
+- Configuração de automação no BigQuery (Scheduled Queries) para atualizar a tabela `respostas` a cada 6 horas, de forma autônoma.
+
 ## [1.3.0] - 2026-03-05
 
 ### Adicionado
