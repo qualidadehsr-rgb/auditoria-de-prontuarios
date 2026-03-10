@@ -5,8 +5,23 @@ Todos os aspectos notáveis de alterações a este projeto serão documentados n
 O formato baseia-se no standard [Keep a Changelog](https://keepachangelog.com/),
 e este projeto adere à [Versionação Semântica](https://semver.org/).
 
+## [1.5.0] - 2026-03-10
+
+### Adicionado
+- **Documentação de Arquitetura (ADR 0005):** Adicionado registro de decisão detalhando a modelagem EAV (Entity-Attribute-Value) para superação do 'Wide Table Problem' dos dados legados.
+- **Scripts de ETL & Helpers:** Inclusão dos scripts SQL (`etl/silver_detalhes.sql`) com comandos `MERGE` e `UNPIVOT`, além do utilitário `scripts/gera_colunas_unpivot.sql` para manutenção do BigQuery.
+- **Mecanismos de Integridade:** Implementação nativa de geração de `UUIDv4` para cada detalhe de resposta, habilitando deduplicação e idempotência na camada Silver.
+
+### Alterado
+- **Atualização do `ARCHITECTURE.md`:** Refinamento da documentação técnica para distinguir corretamente Ingestão Near-real-time (BigQuery Streaming) de bancos OLTP, e detalhamento de consumo analítico via Views.
+- **Pipeline de Dados Legados:** A estrutura horizontal de mais de 600 colunas foi oficialmente convertida para o modelo vertical (EAV), preparando o terreno para a visualização no Looker Studio sem *pivot* manual.
+
+### Fixado
+- **Resolução do 'Wide Table Problem':** Ingestão bem-sucedida de **104.820 linhas** históricas na tabela `detalhes_respostas` (Camada Silver) superando limites analíticos anteriores.
+- **Hotfix de Infraestrutura (Render.com):** Reversão (Rollback) de emergência para a versão `Oct/2025` na URL legada devido a um conflito de Auto-Deploy gerado por atualizações no repositório corporativo. Funcionalidade de Auto-Deploy desativada no serviço legado para garantir o isolamento e a estabilidade da operação do hospital.
+
 ## [1.4.0] - 2026-03-09
-### Added
+### Adicionado
 - Implementação de rotina de UPSERT (`MERGE`) no script `etl/silver_cabecalho.sql` para consolidação do cabeçalho legado.
 - Regra de Data Cleansing na camada Silver (tratamento de nulos e remoção de duplicidades baseada na chave de unicidade ampliada).
 - Configuração de automação no BigQuery (Scheduled Queries) para atualizar a tabela `respostas` a cada 6 horas, de forma autônoma.

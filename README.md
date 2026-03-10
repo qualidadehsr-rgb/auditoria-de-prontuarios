@@ -2,71 +2,74 @@
 
 Um ecossistema completo (App Web + API + Data Warehouse + BI) construído para resolver o desafio de escalabilidade na auditoria de milhares de prontuários hospitalares simultâneos, transformando dados qualitativos e quantitativos em inteligência de negócio.
 
-## O Problema (Contexto do Negócio)
+## 1. O Problema (Contexto do Negócio)
 
-A auditoria clínica exige a avaliação minuciosa de mais de 600 itens por prontuário. Originalmente, esses dados eram salvos de forma plana em uma única aba de planilha do Google Sheets. Com a escala do projeto, esbarramos em limitações críticas:
-* **"Wide Table Problem":** Painéis no Looker Studio sofriam com alta latência (ou quebravam) ao tentar ler centenas de colunas simultaneamente.
-* **Perda de Dados (Concorrência):** Risco elevado de sobrescrita com múltiplos auditores salvando registros no mesmo instante.
-* **Silos Qualitativos:** As "Observações" médicas ficavam isoladas em colunas específicas, dificultando cruzamentos de causa-raiz para não conformidades.
+A auditoria clínica exige a avaliação minuciosa de mais de 600 itens por prontuário. Originalmente, esses dados eram salvos de forma plana em uma única aba de planilha do Google Sheets. Com a escala do projeto, esbarramos em limitações críticas de engenharia:
+* **"Wide Table Problem":** Painéis no Looker Studio sofriam com alta latência (ou quebravam) ao tentar ler centenas de colunas horizontais com alta esparsidade (valores nulos).
+* **Perda de Dados por Concorrência:** Risco elevado de *locks* e sobrescrita de dados com múltiplos auditores tentando salvar registros no exato mesmo instante.
+* **Silos Qualitativos:** As "Observações" médicas ficavam perdidas, dificultando o cruzamento ágil de causa-raiz para as não-conformidades.
 
-## A Solução e Arquitetura
+## 2. A Solução e Arquitetura
 
-Desenvolvi uma arquitetura híbrida dividida em duas frentes de ingestão que convergem para um Data Warehouse corporativo (Google BigQuery), aplicando o conceito de **Arquitetura Medalhão (Medallion Architecture)** e modelagem orientada a Analytics (OLAP).
+Desenvolvi uma arquitetura de dados moderna, substituindo o armazenamento transacional frágil por um Data Warehouse robusto (Google BigQuery) orientado a Analytics (OLAP). O pipeline implementa a **Arquitetura Medalhão (Medallion Architecture)** com duas vias de ingestão: batch (legado) e near-real-time (novos dados).
 
 ```mermaid
 graph TD
-    %% Transacional / Real-time
-    A[Front-End Web] -->|Payload JSON| B(API Node.js/Express)
-    B -->|Unpivot & Validação| C[(BigQuery: Tabelas Silver/Gold)]
-    
-    %% Engenharia de Dados / Batch
-    D[Planilhas Legadas] -->|Extração Bruta| E(ETL Python + Polars)
-    E -->|Tratamento de Matriz na RAM| F[(BigQuery: Camada Bronze)]
-    
-    %% Orquestração e BI
-    G((GitHub Actions\nCron: 06h, 12h, 18h)) -->|Aciona| E
-    C --> H[Looker Studio Dashboards]
-    F --> H
+    subgraph "Ingestão Near-real-time"
+        A[Front-End Web] -->|Payload JSON| B(API Node.js)
+        B -->|Gera UUIDv4 + Stream| C[(BigQuery: Silver/Gold)]
+    end
+
+    subgraph "Ingestão Batch (ETL Legado)"
+        D[Sheets Legado] -->|Python + Polars| E(GitHub Actions)
+        E -->|Carga de Matriz| F[(BigQuery: Bronze)]
+        F -->|MERGE / UNPIVOT| C
+    end
+
+    subgraph "Consumo Analítico"
+        C --> G[Views de Consumo]
+        G --> H[Looker Studio]
+    end
 ```
 
-## Destaques da Engenharia (Ponta a Ponta)
-1. **ETL em Lote e Orquestração (Python/Polars)**: - Script de extração que resolve Shape Errors (linhas irregulares) na memória RAM usando `Polars` e `BytesIO`.
-    - Pipeline de CI/CD automatizado com **GitHub Actions**, rodando instâncias efêmeras em Linux três vezes ao dia (06h, 12h e 18h) para garantir a integridade da camada `bronze_legado_respostas`.
+## 3. Destaques da Engenharia (Ponta a Ponta)
 
-2. **API Real-Time e Tratamento de Erros (Node.js)**: - Backend operando com o padrão ***Fail Fast*** (valida credenciais antes de subir o servidor).
-    - Intercepta o payload do front-end e realiza o Unpivot dos dados em tempo real usando a BigQuery Streaming API.
+1. **Garantia de Integridade e Concorrência**:
+   - Geração de **UUIDv4** na origem (API) para cada auditoria e seus detalhes. O uso de chaves compostas e operações de `MERGE` garantem a **idempotência** dos scripts (rodar o pipeline N vezes não duplica os dados) e elimina a perda de dados por acessos simultâneos.
+2. **Modelagem EAV para o "Wide Table Problem"**:
+   - As 600+ colunas horizontais do legado foram transformadas via `UNPIVOT` em um modelo vertical **Entity-Attribute-Value (EAV)**. O banco agora cresce em linhas, não em colunas, suportando a adição de novas perguntas no formulário sem necessidade de alteração de *schema* estrutural.
+3. **Consumo Transparente no BI**:
+   - O consumo no Looker Studio é intermediado por **Views de Consumo/Transformação** no BigQuery. Elas realizam o *pivot* dinâmico controlado por dimensão, expondo métricas limpas sem exigir que a ferramenta de BI ou o usuário final façam transformações pesadas.
+4. **ETL em Lote Avançado (Python/Polars)**:
+   - Extração que resolve *Shape Errors* diretamente na memória RAM usando `Polars` e `BytesIO`, orquestrado via GitHub Actions em instâncias efêmeras (Linux) a cada 6 horas.
+5. **API com "Fail Fast"**:
+   - O backend em Node.js valida chaves de serviço e variáveis de ambiente no *boot*, impedindo que a aplicação suba "cega" e receba tráfego se não conseguir se conectar ao Data Warehouse.
 
-3. **Modelagem de Dados (SQL)**: - Adoção do modelo **EAV (Entity-Attribute-Value)**. Em vez de 600 colunas, o banco armazena dados em duas tabelas relacionais (`respostas` para metadados e `detalhes_respostas` para granularidade).
+## 4. Métricas de Impacto e Valor
 
-4. **Processamento Silver (Automático e Upsert)**: 
-    - A consolidação dos dados da camada Bronze para a Silver (tabela `respostas`) é feita através de uma **Scheduled Query no BigQuery**. O script executa um `MERGE` a cada 6 horas, garantindo deduplicação e limpeza (Data Cleansing) sem intervenção manual.
+* **Escala Histórica:** Processamento e ingestão bem-sucedida de **104.820 linhas históricas** legadas, padronizando o passado e o presente na mesma modelagem EAV.
+* **Performance Analítica:** Redução drástica no tempo de carregamento dos Dashboards (de ~40 segundos no Google Sheets para < 3 segundos nativos no BigQuery).
+* **Otimização de Armazenamento:** A eliminação de mais de 600 colunas fixas erradicou os dados "vazios" (nulos) do banco, economizando processamento de leitura.
+* **Alta Disponibilidade:** O novo ecossistema suporta escalabilidade horizontal, permitindo **dezenas de auditores simultâneos** sem travamentos de planilha ou *locks* de linha.
 
-## Métricas de Impacto e Valor
-- **Performance do BI**: Fim da latência no Looker Studio ao mudar o paradigma de colunamento horizontal para um modelo tabular vertical estruturado.
-- **Integridade de Dados**: Eliminação da perda de dados por acessos concorrentes através da arquitetura distribuída.
-- **Governança**: Separação clara entre dados brutos (Bronze) e dados modelados (Silver/Gold), permitindo auditoria histórica sem impactar o sistema em produção.
-
-## Tecnologias Utilizadas
-- **Engenharia de Dados**: Python 3.11, Polars, Google BigQuery.
-- **Engenharia de Software (API/Web)**: Node.js, Express.js, JS Vanilla, HTML5/CSS3.
-- **Orquestração & CI/CD**: GitHub Actions (Cron Jobs), Git/GitHub (Conventional Commits).
-- **Segurança**: Google Cloud IAM (Service Accounts), `.env` para gestão de secrets.
+## 5. Tecnologias Utilizadas
+- **Engenharia de Dados**: Python 3.11, Polars, Google BigQuery, SQL (MERGE/UNPIVOT).
+- **Engenharia de Software (API/Web)**: Node.js, Express.js, HTML5/JS Vanilla.
+- **Orquestração & CI/CD**: GitHub Actions (Cron Jobs), Gitflow simplificado.
 - **Data Visualization**: Looker Studio.
 
-## Documentação e Decisões
-Este projeto adota o padrão de **Architecture Decision Records (ADRs)** para rastreabilidade de decisões técnicas. Acesse o histórico na pasta `docs/adr/`.
+## 6. Documentação e Decisões
+Este projeto adota o padrão de **Architecture Decision Records (ADRs)** para rastreabilidade técnica. Acesse o histórico na pasta `docs/adr/`. 
 Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Changelog](./CHANGELOG.md).
 
-## Próximos Passos (Roadmap)
-[x] Construir as transformações SQL na Camada Silver no BigQuery para limpeza das tipagens (datas e categorias) dos dados da Camada Bronze.
+## 7. Próximos Passos (Engineering Roadmap)
+- [x] Construir transformações SQL na Camada Silver (BigQuery) para tipagem e limpeza dos dados da Camada Bronze.
+- [x] Desenvolver pipeline com `UNPIVOT` para transformar mais de 400 colunas brutas no formato EAV, garantindo a carga histórica.
+- [ ] **Data Quality:** Implementar testes de *schema* + regras de domínio + assertivas SQL na Camada Silver (via dbt ou BigQuery Data Quality).
+- [ ] **Testes de Contrato:** Validar payload de entrada na API (Schema Validation) e automatizar testes de idempotência no CI/CD.
+- [ ] **Observabilidade:** Implementar logs de aplicação estruturados na API (ex: Winston/Morgan) com injeção de `request_id` para correlação de eventos.
 
-[ ] Desenvolver script de UNPIVOT no BigQuery para transformar as 400+ colunas de perguntas da Camada Bronze em formato tabular longo (EAV) na tabela `detalhes_respostas`.
-
-[ ] Implementar logs de aplicação estruturados na API (ex: Winston/Morgan).
-
-[ ] Desenvolver testes unitários para a validação do payload do formulário.
-
-
-## Desenvolvido por:
-### Ediney Magalhães
-- Analytics Engineer / Data Engineer / Estatistico
+---
+### Desenvolvido por:
+**Ediney Magalhães**
+*Analytics Engineer / Data Engineer / Estatístico*
