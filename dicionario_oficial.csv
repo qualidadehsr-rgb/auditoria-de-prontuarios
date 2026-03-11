@@ -1,0 +1,240 @@
+codigo_base,tipo_avaliacao,tema_formatado,pergunta_formatada
+Clinico_Id_NomeCompleto,Clinico,Identificação do Paciente,Nome completo
+Clinico_Id_DataNasc,Clinico,Identificação do Paciente,Data de nascimento
+Clinico_Id_Sexo,Clinico,Identificação do Paciente,Sexo
+Clinico_Id_NomeMae,Clinico,Identificação do Paciente,Nome da mãe
+Clinico_Id_Endereco,Clinico,Identificação do Paciente,Endereço
+Clinico_Triagem_Realizada,Clinico,Triagem,Foi realizado triagem?
+Clinico_Triagem_ClassificacaoCorreta,Clinico,Triagem,Realizada classificação pelo Protocolo de Manchester (adaptado)?
+Clinico_HDA_QuadroClinico,Clinico,HDA,Possui quadro clínico do paciente?
+Clinico_HDA_CondutaMedica,Clinico,HDA,Possui conduta proposta pelo médico?
+Clinico_HDA_ExameFisico,Clinico,HDA,Possui exame físico do paciente?
+Clinico_HDA_SinalComorbidades,Clinico,HDA,Comorbidades do paciente registradas em prontuário?
+Clinico_HDA_SinalAlergias,Clinico,HDA,Alergias do paciente registradas em prontuário?
+Clinico_HDA_HipoteseDiagnostica,Clinico,HDA,Possui Hipotese Diagnóstica?
+Clinico_HDA_ExamesComplementares,Clinico,HDA,Exames complementares solicitados?
+Clinico_Reconciliacao_MedsUso,Clinico,Reconciliação medicamentosa na admissão,Possui medicações que paciente faz o uso?
+Clinico_Reconciliacao_HorarioDose,Clinico,Reconciliação medicamentosa na admissão,Possui horário da dose?
+Clinico_Reconciliacao_Frequencia,Clinico,Reconciliação medicamentosa na admissão,Possui frequência?
+Clinico_Reconciliacao_SinalAlergias,Clinico,Reconciliação medicamentosa na admissão,Alergias do paciente registradas em prontuário?
+Clinico_Reconciliacao_ManterMed,Clinico,Reconciliação medicamentosa na admissão,Possui a informação se a medicação deve ser mantida ou não? Conciliado na prescrição? Há justificativa em caso de suspensão?
+Clinico_Transporte_Diagnostico,Clinico,Check list de Transporte Seguro - SBAR,Possui diagnóstico?
+Clinico_Transporte_SinalAlergias,Clinico,Check list de Transporte Seguro - SBAR,Possui sinalização de alergias?
+Clinico_Transporte_SinalPrecaucoes,Clinico,Check list de Transporte Seguro - SBAR,Possui sinalização de precauções?
+Clinico_Transporte_MotivoTransferencia,Clinico,Check list de Transporte Seguro - SBAR,Motivo da transferência registrado?
+Clinico_Transporte_UnidadeOrigem,Clinico,Check list de Transporte Seguro - SBAR,Possui unidade de origem?
+Clinico_Transporte_UnidadeDestino,Clinico,Check list de Transporte Seguro - SBAR,Possui unidade de destino?
+Clinico_Transporte_IdRiscos,Clinico,Check list de Transporte Seguro - SBAR,Possui identificações dos riscos?
+Clinico_Transporte_SSVVAtualizado,Clinico,Check list de Transporte Seguro - SBAR,Possui SSVV atualizados?
+Clinico_Transporte_Criterios,Clinico,Check list de Transporte Seguro - SBAR,Possui critérios do transporte?
+Clinico_Transporte_RecomendacoesPreenchidas,Clinico,Check list de Transporte Seguro - SBAR,Possui recomendações preenchidas para o setor de destino?
+Clinico_TEV_Avaliacao24h,Clinico,Aplicação do Algoritmo de TEV,Realizado avaliação médica de TEV nas primeiras 24hrs?
+Clinico_TEV_PrescricaoProtocolo,Clinico,Aplicação do Algoritmo de TEV,Prescrição esta conforme estabelecido no protocolo?
+Clinico_TEV_ReavaliacaoEnfermagem,Clinico,Aplicação do Algoritmo de TEV,Houve reavaliação diária pela equipe de enfermagem?
+Clinico_SAE_HistoricoEnf,Clinico,SAE ( sistematização da assistência de enfermagem),Possui histórico de enfermagem preenchido integralmente?
+Clinico_SAE_DiagnosticoEnf,Clinico,SAE ( sistematização da assistência de enfermagem),Possui diagnóstico de enfermagem?
+Clinico_SAE_CuidadosPrescritos,Clinico,SAE ( sistematização da assistência de enfermagem),Possui cuidados de enfermagem prescritos de acordo com os riscos e diagnósticos?
+Clinico_Riscos_AvaliacaoQueda,Clinico,Avaliação de riscos,Possui avaliação do risco de queda?
+Clinico_Riscos_AvaliacaoLesaoPele,Clinico,Avaliação de riscos,Possui avaliação do risco de lesão de pele?
+Clinico_Riscos_AvaliacaoBroncoaspiracao,Clinico,Avaliação de riscos,Possui avaliação do risco de broncoaspiração?
+Clinico_PlanoMedico_BemDefinido,Clinico,Plano terapeutico médico,Possui plano terapêutico médico descrito?
+Clinico_PlanoMulti_Existente,Clinico,Plano terapeutico multidisciplinar,Possui plano terapêutico multidisciplinar?
+Clinico_PlanoMulti_Metas,Clinico,Plano terapeutico multidisciplinar,Possui metas a serem alcançadas?
+Clinico_PlanoMulti_Reavaliacao,Clinico,Plano terapeutico multidisciplinar,Possui reavaliação?
+Clinico_PlanoMulti_TodasCategorias,Clinico,Plano terapeutico multidisciplinar,"Possui plano terapêutico multidisciplinar de todas as categorias que prestam assistência a esse paciente? Caso tenha identificado alguma especialidade que não fez o plano, inserir essa infomação no campo de observações"
+Clinico_PlanoCuidado_InfoRelevante,Clinico,Plano de cuidado paciente e família,Possui plano de cuidado paciente e familia com informações relevantes?
+Clinico_EvolucaoEnf_InfoClara,Clinico,Evolução de enfermagem,"A evolução contempla a avaliação do paciente baseada nos problemas identificados (ex.: dor, integridade da pele, sinais vitais alterados)? Descreve ações/intervenções de enfermagem realizadas e a resposta do paciente?"
+Clinico_AnotacaoEnf_InfoClara,Clinico,Anotação de enfermagem,"A anotação do técnico de enfermagem possui precauções, dispositivos, acessos vasculares, registro de condutas realizadas durante o plantão (banho, mudança de decúbito, etc)? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Clinico_EvolucaoMedica_InfoClara,Clinico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Clinico_Eventos_Identificado,Clinico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? Se sim, inserir no campo de observações qual evento"
+Clinico_Eventos_Notificado,Clinico,Eventos adversos,Existe evidência de notificação em prontuário?
+Clinico_Alta_Sumario,Clinico,Sumário de Alta,Possui sumário de alta?
+Clinico_Alta_Orientacoes,Clinico,Sumário de Alta,Possui orientações de alta?
+Clinico_Alta_Especialidade,Clinico,Sumário de Alta,Qual a especialidade?
+Clinico_Final_UsoInadequadoSiglas,Clinico,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Clinico_Suicidio_DocumentoAberto,Clinico,Avaliação de Risco de Suicídio,"Documento aberto no pronto socorro, com preenchimento integral do formulário e identificação dos fatores de risco pelo enfermeiro?"
+Clinico_Suicidio_SinalizadoProtocolo,Clinico,Avaliação de Risco de Suicídio,"Se necessário o acionamento da psicologia para realização da Etapa 2 (Avaliação e Classificação do Risco de Suicídio), esta etapa foi sinalizada no protocolo? Realizado parecer?"
+Clinico_Suicidio_SinalizacaoBarreiras,Clinico,Avaliação de Risco de Suicídio,"Se risco evidenciado, a aplicação das barreiras de prevenção foram sinalizadas no formulário?"
+Clinico_Suicidio_FormularioPreenchido,Clinico,Avaliação de Risco de Suicídio,"Na trasnferência do paciente ao setor de destino, o formulário foi preenchido integralmente?"
+Clinico_Suicidio_ParecerPsicologia,Clinico,Avaliação de Risco de Suicídio,"Se necessário avaliação da psicologia, houve realização de parecer? Consta registro do atendimento em prontuário?"
+Clinico_Suicidio_ParecerPsiquiatria,Clinico,Avaliação de Risco de Suicídio,"Se necessário avaliação da psiquiatria, houve realização de parecer? Consta registro do atendimento em prontuário?"
+Clinico_Protocolos_AtendimentoProtocolo,Clinico,Protocolos Gerenciados,"Paciente em atendimento de protocolo assistencial? Se sim, descrever o protocolo na observação."
+Clinico_Protocolos_DocumentoPreenchido,Clinico,Protocolos Gerenciados,Documento preenchido integralmente?
+Clinico_Protocolos_TempoRespeitado,Clinico,Protocolos Gerenciados,Tempos dos protocolos respeitados?
+Clinico_Protocolos_FalhasEvidenciadas,Clinico,Protocolos Gerenciados,"Falhas evidenciadas? Se sim, registrar a falha em campo de observação."
+Cirurgico_Id_NomePaciente,Cirurgico,Identificação do Paciente,Nome completo
+Cirurgico_Id_DataNasc,Cirurgico,Identificação do Paciente,Data de nascimento
+Cirurgico_Id_Sexo,Cirurgico,Identificação do Paciente,Sexo
+Cirurgico_Id_NomeMae,Cirurgico,Identificação do Paciente,Nome da mãe
+Cirurgico_Id_Endereco,Cirurgico,Identificação do Paciente,Endereço
+Cirurgico_Triagem_Realizada,Cirurgico,Triagem (em casos de pacientes provenientes da emergência),Foi realizado triagem?
+Cirurgico_Triagem_ClassificacaoCorreta,Cirurgico,Triagem (em casos de pacientes provenientes da emergência),Realizada classificação pelo Protocolo de Manchester (adaptado)?
+Cirurgico_HDA_QuadroClinico,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Possui quadro clinico do paciente?
+Cirurgico_HDA_CondutaMedica,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Possui conduta proposta pelo médico?
+Cirurgico_HDA_ExameFisico,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Possui exame fisico do paciente?
+Cirurgico_HDA_Comorbidades,Cirurgico,HDA (em casos de pacientes provenientes da emergência),"Se comorbidades, constam registradas em prontuário?"
+Cirurgico_HDA_Alergias,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Alergias do paciente registradas em prontuário?
+Cirurgico_HDA_ExamesComplementares,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Exames complementares solicitados?
+Cirurgico_HDA_HipoteseDiagnostica,Cirurgico,HDA (em casos de pacientes provenientes da emergência),Possui Hipótese Diagnóstica?
+Cirurgico_Reconciliacao_Medicacao_Uso,Cirurgico,Reconciliação medicamentosa na admissão,Possui medicações que paciente faz o uso?
+Cirurgico_Reconciliacao_Dose,Cirurgico,Reconciliação medicamentosa na admissão,Possui dose?
+Cirurgico_Reconciliacao_Frequencia,Cirurgico,Reconciliação medicamentosa na admissão,Possui frequência?
+Cirurgico_Reconciliacao_Alergia,Cirurgico,Reconciliação medicamentosa na admissão,Alergias do paciente registradas em prontuário?
+Cirurgico_Reconciliacao_Medicacao_Mantida,Cirurgico,Reconciliação medicamentosa na admissão,Possui a informação se a medicação deve ser mantida ou não? Conciliado na prescrição? Há justificativa em caso de suspensão?
+Cirurgico_Transporte_Diagnostico,Cirurgico,Check list de Transporte Seguro - SBAR,Possui diagnóstico?
+Cirurgico_Transporte_SinalAlergias,Cirurgico,Check list de Transporte Seguro - SBAR,Possui sinalização de alergias?
+Cirurgico_Transporte_Precaucoes,Cirurgico,Check list de Transporte Seguro - SBAR,Possui precauções?
+Cirurgico_Transporte_MotivoTransferencia,Cirurgico,Check list de Transporte Seguro - SBAR,Motivo da trasferência registrado?
+Cirurgico_Transporte_UnidadeOrigem,Cirurgico,Check list de Transporte Seguro - SBAR,Possui unidade de origem?
+Cirurgico_Transporte_UnidadeDestino,Cirurgico,Check list de Transporte Seguro - SBAR,Possui unidade de destino?
+Cirurgico_Transporte_IdRiscos,Cirurgico,Check list de Transporte Seguro - SBAR,Possui identificações dos riscos?
+Cirurgico_Transporte_SSVVAtualizado,Cirurgico,Check list de Transporte Seguro - SBAR,Possui SSVV atualizados?
+Cirurgico_Transporte_Criterios,Cirurgico,Check list de Transporte Seguro - SBAR,Possui critérios do transporte?
+Cirurgico_Transporte_RecomendacoesPreenchidas,Cirurgico,Check list de Transporte Seguro - SBAR,Possui recomendações preenchidas para o setor de destino?
+Cirurgico_TEV_Avaliacao24h,Cirurgico,Aplicação do Algoritmo de TEV,Realizado avaliação de TEV nas primeiras 24hrs?
+Cirurgico_TEV_PrescricaoProtocolo,Cirurgico,Aplicação do Algoritmo de TEV,Prescrição esta conforme estabelecido no protocolo?
+Cirurgico_TEV_Reavaliacao_Diaria_Enfermagem,Cirurgico,Aplicação do Algoritmo de TEV,Houve reavaliação diária pela equipe de enfermagem?
+Cirurgico_SAE_HistoricoEnf,Cirurgico,SAE ( sistematização da assistência de enfermagem),Possui histórico de enfermagem preenchido integralmente?
+Cirurgico_SAE_DiagnosticoEnf,Cirurgico,SAE ( sistematização da assistência de enfermagem),Possui diagnóstico de enfermagem?
+Cirurgico_SAE_CuidadosPrescritos,Cirurgico,SAE ( sistematização da assistência de enfermagem),Possui cuidados de enfermagem prescritos de acordo com os riscos/diagnósticos?
+Cirurgico_Riscos_AvaliacaoQueda,Cirurgico,Avaliação de riscos,Possui avaliação do risco de queda?
+Cirurgico_Riscos_AvaliacaoBroncoaspiracao,Cirurgico,Avaliação de riscos,Possui avaliação do risco de broncoaspiração?
+Cirurgico_Riscos_AvaliacaoLesao,Cirurgico,Avaliação de riscos,Possui avaliação do risco de lesão?
+Cirurgico_PlanoMedico_BemDefinido,Cirurgico,Plano terapêutico médico,Possui plano terapêutico médico descrito?
+Cirurgico_PlanoMulti_Existente,Cirurgico,Plano terapêutico multidisciplinar,Possui plano terapêutico multidisciplinar?
+Cirurgico_PlanoMulti_Metas,Cirurgico,Plano terapêutico multidisciplinar,Possui metas a serem alcançadas?
+Cirurgico_PlanoMulti_Reavaliacao,Cirurgico,Plano terapêutico multidisciplinar,Possui reavaliação?
+Cirurgico_PlanoMulti_TodasCategorias,Cirurgico,Plano terapêutico multidisciplinar,"Possui plano terapêutico multidisciplinar de todas as categorias que prestam assistência a esse paciente? Caso tenha identificado alguma especialidade que não fez o plano, inserir essa infomação no campo de observações."
+Cirurgico_EvolucaoEnf_InfoClara,Cirurgico,Evolução de enfermagem,"A evolução contempla a avaliação do paciente baseada nos problemas identificados (ex.: dor, integridade da pele, sinais vitais alterados)? Descreve ações/intervenções de enfermagem realizadas e a resposta do paciente?"
+Cirurgico_AnotacaoEnf_InfoClara,Cirurgico,Anotação de enfermagem,"A anotação do técnico de enfermagem possui precauções, dispositivos, acessos vasculares, registro de condutas realizadas durante o plantão (banho, mudança de decúbito, etc)? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Cirurgico_EvolucaoMedica_InfoClara,Cirurgico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Cirurgico_PlanoCuidado_InfoRelevante,Cirurgico,Plano de cuidado paciente e família,Possui plano de cuidado paciente e família com informações relevantes?
+Cirurgico_Eventos_Identificado,Cirurgico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? caso responda sim, inserir no campo de observações qual evento"
+Cirurgico_Eventos_Notificado,Cirurgico,Eventos adversos,Foi notificado? Existe evidência de notificação em prontuário?
+Cirurgico_TCLE_Cirurgico,Cirurgico,TCLE Cirúrgico,"Aplicado termo de consentimento esclarecido para procedimento cirúrgico, com assinatura do profissional e paciente ou responsável?"
+Cirurgico_TCLE_Anestesico,Cirurgico,TCLE Anestésico,"Aplicado termo de consentimento esclarecido anestésico/sedação, com assinatura do profissional e paciente ou responsável?"
+Cirurgico_ConsultaPre_Registrada,Cirurgico,Consulta pré-anestésica,Consulta pré anestésica registrada?
+Cirurgico_Boletim_Preenchido,Cirurgico,Boletim Anestésico,Boletim anestésico preenchido integralmente?
+Cirurgico_Checklist_SignIn,Cirurgico,Check List de cirurgia segura,"Sign-In (Antes da indução anestésica), preenchido todas as etapas?"
+Cirurgico_Checklist_Demarcacao,Cirurgico,Check List de cirurgia segura,Local de cirurgia foi demarcado?
+Cirurgico_Checklist_TimeOut,Cirurgico,Check List de cirurgia segura,"Time- Out (antes da incisão cirurgica),preenchido todas as etapas?"
+Cirurgico_Checklist_Profilaxia60min,Cirurgico,Check List de cirurgia segura,A profilaxia antimicrobiana foi realizada em até 60min?
+Cirurgico_Checklist_SignOut,Cirurgico,Check List de cirurgia segura,"Sing- Out (Antes da saída da sala de cirurgia),preenchido todas as etapas?"
+Cirurgico_Checklist_Contagem,Cirurgico,Check List de cirurgia segura,"Contagem de instrumentos, compressas e agulhas?"
+Cirurgico_Alta_Sumario,Cirurgico,Sumário de Alta,Possui sumário de alta?
+Cirurgico_Alta_Orientacoes,Cirurgico,Sumário de Alta,Possui orientações pós alta?
+Cirurgico_Final_UsoInadequadoSiglas,Cirurgico,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Obstétrico_Id_NomePaciente,Obstétrico,Identificação do Paciente,Nome completo
+Obstétrico_Id_DataNasc,Obstétrico,Identificação do Paciente,Data de nascimento
+Obstétrico_Id_Sexo,Obstétrico,Identificação do Paciente,Sexo
+Obstétrico_Id_NomeMae,Obstétrico,Identificação do Paciente,Nome da mãe
+Obstétrico_Id_Endereco,Obstétrico,Identificação do Paciente,Endereço
+Obstétrico_Triagem_Realizada,Obstétrico,Triagem (em casos de pacientes provenientes da emergência),Foi realizado triagem?
+Obstétrico_Triagem_ClassificacaoCorreta,Obstétrico,Triagem (em casos de pacientes provenientes da emergência),Realizada classificação pelo Protocolo de Manchester (adaptado)?
+Obstétrico_HDA_QuadroClinico,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Possui quadro clinico do paciente?
+Obstétrico_HDA_CondutaMedica,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Possui conduta proposta pelo médico?
+Obstétrico_HDA_ExameFisico,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Possui exame fisico do paciente?
+Obstétrico_HDA_Comorbidades,Obstétrico,HDA (em casos de pacientes provenientes da emergência),"Se comorbidades, constam registradas em prontuário?"
+Obstétrico_HDA_Alergias,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Alergias do paciente registradas em prontuário?
+Obstétrico_HDA_ExamesComplementares,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Exames complementares solicitados?
+Obstétrico_HDA_HipoteseDiagnostica,Obstétrico,HDA (em casos de pacientes provenientes da emergência),Possui Hipótese Diagnóstica?
+Obstétrico_Reconciliacao_Medicacao_Uso,Obstétrico,Reconciliação medicamentosa na admissão,Possui medicações que paciente faz o uso?
+Obstétrico_Reconciliacao_Dose,Obstétrico,Reconciliação medicamentosa na admissão,Possui dose?
+Obstétrico_Reconciliacao_Frequencia,Obstétrico,Reconciliação medicamentosa na admissão,Possui frequência?
+Obstétrico_Reconciliacao_Alergia,Obstétrico,Reconciliação medicamentosa na admissão,Alergias do paciente registradas em prontuário?
+Obstétrico_Reconciliacao_Medicacao_Mantida,Obstétrico,Reconciliação medicamentosa na admissão,Possui a informação se a medicação deve ser mantida ou não? Conciliado na prescrição? Há justificativa em caso de suspensão?
+Obstétrico_Transporte_Diagnostico,Obstétrico,Check list de Transporte Seguro - SBAR,Possui diagnóstico?
+Obstétrico_Transporte_SinalAlergias,Obstétrico,Check list de Transporte Seguro - SBAR,Possui sinalização de alergias?
+Obstétrico_Transporte_Precaucoes,Obstétrico,Check list de Transporte Seguro - SBAR,Possui precauções?
+Obstétrico_Transporte_MotivoTransferencia,Obstétrico,Check list de Transporte Seguro - SBAR,Motivo da trasferência registrado?
+Obstétrico_Transporte_UnidadeOrigem,Obstétrico,Check list de Transporte Seguro - SBAR,Possui unidade de origem?
+Obstétrico_Transporte_UnidadeDestino,Obstétrico,Check list de Transporte Seguro - SBAR,Possui unidade de destino?
+Obstétrico_Transporte_IdRiscos,Obstétrico,Check list de Transporte Seguro - SBAR,Possui identificações dos riscos?
+Obstétrico_Transporte_SSVVAtualizado,Obstétrico,Check list de Transporte Seguro - SBAR,Possui SSVV atualizados?
+Obstétrico_Transporte_Criterios,Obstétrico,Check list de Transporte Seguro - SBAR,Possui critérios do transporte?
+Obstétrico_Transporte_RecomendacoesPreenchidas,Obstétrico,Check list de Transporte Seguro - SBAR,Possui recomendações preenchidas para o setor de destino?
+Obstétrico_TEV_Avaliacao24h,Obstétrico,Aplicação do Algoritmo de TEV,Realizado avaliação de TEV nas primeiras 24hrs?
+Obstétrico_TEV_PrescricaoProtocolo,Obstétrico,Aplicação do Algoritmo de TEV,Prescrição esta conforme estabelecido no protocolo?
+Obstétrico_TEV_Reavaliacao_Diaria_Enfermagem,Obstétrico,Aplicação do Algoritmo de TEV,Houve reavaliação diária pela equipe de enfermagem?
+Obstétrico_SAE_HistoricoEnf,Obstétrico,SAE ( sistematização da assistência de enfermagem),Possui histórico de enfermagem preenchido integralmente?
+Obstétrico_SAE_DiagnosticoEnf,Obstétrico,SAE ( sistematização da assistência de enfermagem),Possui diagnóstico de enfermagem?
+Obstétrico_SAE_CuidadosPrescritos,Obstétrico,SAE ( sistematização da assistência de enfermagem),Possui cuidados de enfermagem prescritos de acordo com os riscos/diagnósticos?
+Obstétrico_Riscos_AvaliacaoQueda,Obstétrico,Avaliação de riscos,Possui avaliação do risco de queda?
+Obstétrico_Riscos_AvaliacaoBroncoaspiracao,Obstétrico,Avaliação de riscos,Possui avaliação do risco de broncoaspiração?
+Obstétrico_Riscos_AvaliacaoLesao,Obstétrico,Avaliação de riscos,Possui avaliação do risco de lesão?
+Obstétrico_PlanoMedico_BemDefinido,Obstétrico,Plano terapêutico médico,Possui plano terapêutico médico descrito?
+Obstétrico_PlanoMulti_Existente,Obstétrico,Plano terapêutico multidisciplinar,Possui plano terapêutico multidisciplinar?
+Obstétrico_PlanoMulti_Metas,Obstétrico,Plano terapêutico multidisciplinar,Possui metas a serem alcançadas?
+Obstétrico_PlanoMulti_Reavaliacao,Obstétrico,Plano terapêutico multidisciplinar,Possui reavaliação?
+Obstétrico_PlanoMulti_TodasCategorias,Obstétrico,Plano terapêutico multidisciplinar,"Possui plano terapêutico multidisciplinar de todas as categorias que prestam assistência a esse paciente? Caso tenha identificado alguma especialidade que não fez o plano, inserir essa infomação no campo de observações."
+Obstétrico_EvolucaoEnf_InfoClara,Obstétrico,Evolução de enfermagem,"A evolução contempla a avaliação do paciente baseada nos problemas identificados (ex.: dor, integridade da pele, sinais vitais alterados)? Descreve ações/intervenções de enfermagem realizadas e a resposta do paciente?"
+Obstétrico_AnotacaoEnf_InfoClara,Obstétrico,Anotação de enfermagem,"A anotação do técnico de enfermagem possui precauções, dispositivos, acessos vasculares, registro de condutas realizadas durante o plantão (banho, mudança de decúbito, etc)? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Obstétrico_EvolucaoMedica_InfoClara,Obstétrico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
+Obstétrico_PlanoCuidado_InfoRelevante,Obstétrico,Plano de cuidado paciente e família,Possui plano de cuidado paciente e família com informações relevantes?
+Obstétrico_Eventos_Identificado,Obstétrico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? caso responda sim, inserir no campo de observações qual evento"
+Obstétrico_Eventos_Notificado,Obstétrico,Eventos adversos,Foi notificado? Existe evidência de notificação em prontuário?
+Obstétrico_TCLE_Obstetrico,Obstétrico,TCLE Cirúrgico,"Aplicado termo de consentimento esclarecido para procedimento cirúrgico, com assinatura do profissional e paciente ou responsável?"
+Obstétrico_TCLE_Anestesico,Obstétrico,TCLE Anestésico,"Aplicado termo de consentimento esclarecido anestésico/sedação, com assinatura do profissional e paciente ou responsável?"
+Obstétrico_ConsultaPre_Registrada,Obstétrico,Consulta pré-anestésica,Consulta pré anestésica registrada?
+Obstétrico_Boletim_Preenchido,Obstétrico,Boletim Anestésico,Boletim anestésico preenchido integralmente?
+Obstétrico_Parto_PrimeiraEtapa,Obstétrico,Check List de Parto Seguro,1) Primeira etapa realizada (Admissão)?
+Obstétrico_Parto_StatusParto,Obstétrico,Check List de Parto Seguro,1.1) Status do parto (eletivo/urgência) registrado?
+Obstétrico_Parto_ClassificaoRobson,Obstétrico,Check List de Parto Seguro,1.2) Classificação de Robson realizado?
+Obstétrico_Parto_DadosClinicos,Obstétrico,Check List de Parto Seguro,"1.3) Dados clínicos principais (sinais vitais, BCF) estão completos?"
+Obstétrico_Parto_SegundaEtapa,Obstétrico,Check List de Parto Seguro,2) Segunda etapa realizada (Antes da anestesia e procedimeto na sala obstétrica)?
+Obstétrico_Parto_Tipo&Hemorragia,Obstétrico,Check List de Parto Seguro,2.1) Tipo de parto e risco de hemorragia estão documentados?
+Obstétrico_Parto_ATBCesarea,Obstétrico,Check List de Parto Seguro,"2.2) Em caso de cesárea, antibiótico foi registrado antes da incisão cirúrgica?"
+Obstétrico_Funcionamento_Equipamento,Obstétrico,Check List de Parto Seguro,"2.3) Registro de  funcionamento dos equipamentos realizado? Se alguma falha identificada, registrar em campo de observação."
+Obstétrico_Parto_TerceiraEtapa,Obstétrico,Check List de Parto Seguro,3) Terceira etapa realizada (Após o nascimento)?
+Obstétrico_Parto_CompressasRegistradas,Obstétrico,Check List de Parto Seguro,3.1) Compressas e encaminhamento da placenta foram registrados?
+Obstétrico_Parto_SangramentoDocumentado,Obstétrico,Check List de Parto Seguro,3.2) Sangramento >500 ml foi documentado (se aplicável)?
+Obstétrico_Parto_Apgar,Obstétrico,Check List de Parto Seguro,3.3) Apgar no 1º e 5º minuto foi registrado?
+Obstétrico_Parto_Profilaxias,Obstétrico,Check List de Parto Seguro,"3.4) Profilaxia com vitamina K, foi registrada?"
+Obstétrico_Profilaxia_Iodopovidona,Obstétrico,Check List de Parto Seguro,3.5) Profilaxia com iodopovidona foi registrada? (em caso de parto normal)
+Obstétrico_Parto_QuartaEtapa,Obstétrico,Check List de Parto Seguro,4) Quarta etapa realizada (Alta)?
+Obstétrico_Parto_IdentificacaoBinomio,Obstétrico,Check List de Parto Seguro,4.1) Registro de conferência de identificação do binômio antes da alta?
+Obstétrico_Parto_SSVVPuerpura,Obstétrico,Check List de Parto Seguro,4.2) SSVV da puérpera registrados?
+Obstétrico_Parto_SSVVRn,Obstétrico,Check List de Parto Seguro,4.3) SSVV do RN registrados?
+Obstétrico_Parto_AleitamentoExclusivo,Obstétrico,Check List de Parto Seguro,"4.4) RN de alta em aleitamento exclusivo? Se uso de complemento, registrar em observação."
+Obstétrico_Alta_Sumario,Obstétrico,Sumário de Alta,Possui sumário de alta?
+Obstétrico_Alta_Orientacoes,Obstétrico,Sumário de Alta,Possui orientações pós alta?
+Obstétrico_Final_UsoInadequadoSiglas,Obstétrico,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Fonoaudiologia_EvolucaoAdulto_DocMV,Fonoaudiologia,Evolução fonoaudiológica adulto,Há o documento de evolução fonoaudiológica no Sistema MV?
+Fonoaudiologia_EvolucaoAdulto_GrauDisfagia,Fonoaudiologia,Evolução fonoaudiológica adulto,Possui grau de disfagia?
+Fonoaudiologia_EvolucaoAdulto_ConsistenciaDieta,Fonoaudiologia,Evolução fonoaudiológica adulto,Possui consistência da dieta? (Caso via oral)
+Fonoaudiologia_EvolucaoAdulto_DietaSugerida,Fonoaudiologia,Evolução fonoaudiológica adulto,Existe dieta sugerida?
+Fonoaudiologia_EvolucaoAdulto_Conduta,Fonoaudiologia,Evolução fonoaudiológica adulto,Há a conduta fonoaudiológica?
+Fonoaudiologia_EvolucaoPed_DocMV,Fonoaudiologia,Evolução fonoaudiológica pediátrica/neonatologia,Há o documento de evolução fonoaudiológica no Sistema MV?
+Fonoaudiologia_EvolucaoPed_Conduta,Fonoaudiologia,Evolução fonoaudiológica pediátrica/neonatologia,Tem conduta fonoaudiológica?
+Fonoaudiologia_Orelhinha_DocMV,Fonoaudiologia,Teste da orelhinha,Há o documento no Sistema MV?
+Fonoaudiologia_Orelhinha_Resultado,Fonoaudiologia,Teste da orelhinha,Há o resultado após o teste?
+Fonoaudiologia_Final_UsoInadequadoSiglas,Fonoaudiologia,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Fisioterapia_EvolucaoAdulto_DocMV,Fisioterapia,Evolução fisioterapêutica adulto,Há documento fisioterapêutica no MV?
+Fisioterapia_EvolucaoAdulto_NivelAtividade,Fisioterapia,Evolução fisioterapêutica adulto,Possui nível de atividade pregressa?
+Fisioterapia_EvolucaoAdulto_DeficitForca,Fisioterapia,Evolução fisioterapêutica adulto,Possui deficit de força e funcionalidade?
+Fisioterapia_EvolucaoAdulto_ProjetoTerapeutico,Fisioterapia,Evolução fisioterapêutica adulto,Existe projeto terapêutico funcional e respiratório?
+Fisioterapia_EvolucaoAdulto_conduta_terapeutica,Fisioterapia,Evolução fisioterapêutica adulto,Há condutas fisioterapêuticas?
+Fisioterapia_EvolucaoAdulto_MudancaConduta,Fisioterapia,Evolução fisioterapêutica adulto,Em caso de mudanças de condução respiratória (VNI / IOT / ExTOT / TQT / MNBZ) existe datas correspondentes? E incluiu no cabeçalho da evolução?
+Fisioterapia_EvolucaoPed_DocMV,Fisioterapia,Evolução fisioterapêutica pediátrica,Há evolução fisioterapêutica no sistema?
+Fisioterapia_EvolucaoPed_Conduta,Fisioterapia,Evolução fisioterapêutica pediátrica,Há conduta?
+Fisioterapia_EvolucaoPed_PlanoTerapeutico,Fisioterapia,Evolução fisioterapêutica pediátrica,Existe plano terapêutico?
+Fisioterapia_Testes_Manovacuometria,Fisioterapia,Testes,Possui teste de Manovacuometria?
+Fisioterapia_Testes_Dinamometria,Fisioterapia,Testes,Possui teste de Dinamometria?
+Fisioterapia_Testes_DiarioCaminhada,Fisioterapia,Testes,Possui diário de caminhada?
+Fisioterapia_Testes_DistanciaPercorrida,Fisioterapia,Testes,Possui preenchimento de distância percorrida?
+Fisioterapia_Final_UsoInadequadoSiglas,Fisioterapia,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Nutrição_triagem_UTI,Nutrição,Avaliação na admissão,Paciente com triagem realizada nas primeiras 24h após a internação em unidade/UTI?
+Nutrição_avaliacao_completa,Nutrição,Avaliação na admissão,Avaliação completa presente quando paciente com risco e/ou em uso de terapia nutricional?
+Nutrição_pl_terapeutico_nutri,Nutrição,Planejamento assistencial,Plano terapêutico presente?
+Nutrição_evolucao_revisita,Nutrição,Planejamento assistencial,"Evolução de revisita conforme protocolo institucional? (Paciente com risco nutricional e/ou terapia nutricional visita diária, sem risco nutricional em UTI a cada 48h, sem risco nutricional em unidade de internação a cada 72h)"
+Nutrição_orientacao_alta,Nutrição,Planejamento assistencial,Orientação de alta nutricional registrada em prontuário?
+Nutrição_UsoInadequadoSiglas,Nutrição,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
+Psicologia_DocumentoAberto,Psicologia,Avaliação ao Risco de Suicídio,"Documento aberto no pronto socorro, com preenchimento integral do formulário e identificação dos fatores de risco pelo enfermeiro?"
+Psicologia_AcionamentoPsicologia,Psicologia,Avaliação ao Risco de Suicídio,"Se necessário o acionamento da psicologia para realização da Etapa 2 (Avaliação e Classificação do Risco de Suicídio), esta etapa foi sinalizada no protocolo?"
+Psicologia_AplicacaoBarreiras,Psicologia,Avaliação ao Risco de Suicídio,"Se risco evidenciado, a aplicação das barreiras de prevenção foram sinalizadas no formulário?"
+Psicologia_FormularioPreenchido,Psicologia,Avaliação ao Risco de Suicídio,"Na transferência do paciente ao setor de destino, o formulário foi preenchido integralmente?"
+Psicologia_ParecerPsiquiatria,Psicologia,Avaliação ao Risco de Suicídio,"Se necessário avaliação da psiquiatria, houve realização de parecer? Consta registro do atendimento em prontuário?"
+Psicologia_EvolucaoRegistrada,Psicologia,Avaliação da Psicologia,A evolução está registrada com informações atualizadas sobre o quadro  psicológico do paciente?
+Psicologia_IntervencoesCondutas,Psicologia,Avaliação da Psicologia,As intervenções e condutas adotadas pela psicologia estão registradas em prontuário?
+Psicologia_PlanoComMetas,Psicologia,Avaliação da Psicologia,"O plano terapêutico está descrito, com metas e acompanhamento definidos?"
+Psicologia_UsoInadequadoSiglas,Psicologia,Siglas,"Identificada alguma sigla em prontuário que não consta no siglário padronizado na instituição? Se sim, registrar no campo de observação qual a sigla não padronizada e em qual documento se encontra."
