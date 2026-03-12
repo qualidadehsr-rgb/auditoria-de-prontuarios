@@ -11,6 +11,17 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.7.0] - 2026-03-12
+
+### Adicionado (API)
+- Implementação de **Middleware de Observabilidade** para rastreamento de requisições.
+- Geração de `request_id` único (UUIDv4) injetado no ciclo de vida de cada chamada.
+- Logs estruturados em formato **JSON** para integração com serviços de monitoramento (Cloud Logging/Render).
+- Tratamento de erros robusto com logs de severidade `ERROR` e `WARNING`.
+
+### Alterado (API)
+- Atualização dos IDs das tabelas de destino para a nova estrutura da **Camada Silver** (`silver_respostas` e `silver_detalhes_respostas`).
+
 ## [1.6.0] - 2026-03-11
 
 ### Adicionado
