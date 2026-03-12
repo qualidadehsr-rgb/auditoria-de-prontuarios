@@ -58,7 +58,7 @@ graph TD
     
     G -->|JOIN Cabeçalho| J
     H -->|Pivot Condicional| J
-    I -->|Tradução Labels (LEFT JOIN)| J
+    I -->|"Tradução Labels (LEFT JOIN)"| J
     
     J -->|Leitura Direta Analítica| K
     
