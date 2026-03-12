@@ -10,16 +10,24 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+
 ## [1.6.0] - 2026-03-11
 
 ### Adicionado
 - **Camada Gold (Semântica):** Criação da view `gold_auditorias_consolidadas` no BigQuery, aplicando Pivot Condicional para resolver a modelagem EAV da camada Silver, agrupando `resposta_conformidade` e `observacao_texto` na mesma linha.
 - **Extrator de Metadados (Python):** Script `scripts/extrai_dicionario_real.py` para converter o `ESTRUTURA_FORMULARIO` do front-end em um Dicionário de Dados plano (`dicionario_oficial.csv`), atuando como *Single Source of Truth* (Docs-as-Code).
 - **Documentação de Arquitetura:** Escrita da ADR 0006 justificando a adoção da Camada Gold via Python em vez de manipulação Regex no SQL.
+- **(Database):** Nova arquitetura da **Camada Silver** normalizada (Tabelas: `silver_respostas` e `silver_detalhes_respostas`).
+- Scripts DDL para criação de tabelas com tipagem forte no BigQuery.
+- **Dicionário de Dados** oficial documentando todas as colunas, chaves e metadados.
 
 ### Alterado
 - **Dicionário de Dados:** A tabela `dim_perguntas` no BigQuery foi substituída. Deixou de usar formatação instável via Regex (`REGEXP_REPLACE`) e passou a consumir diretamente o `dicionario_oficial.csv`, garantindo 100% de fidelidade com as perguntas de negócio da interface.
 - **Documentação:** Atualização do `ARCHITECTURE.md` para refletir a topologia ELT (Extract, Load, Transform), separação correta das camadas Bronze, Silver e Gold, e inclusão do diagrama de linhagem de dados (Mermaid.js).
+- **(Database):**
+    - Refatoração dos scripts de ingestão SQL (MERGE) para suportar o novo modelo EAV.
+    - Atualização da `gold_view_consolidada` para realizar o JOIN entre as novas tabelas silver.
+
 
 ## [1.5.0] - 2026-03-10
 
