@@ -5,7 +5,7 @@ WITH detalhes_pivot AS(
        REPLACE(REPLACE(REPLACE(nome_pergunta, "_Resp",""), "_Obs", ""), "'", "") AS codigo_base,
        MAX(CASE WHEN nome_pergunta LIKE '%_Resp%' THEN valor_resposta END) AS resposta_conformidade,
        MAX(CASE WHEN nome_pergunta LIKE '%_Obs%' THEN valor_resposta END) AS observacao_texto
-  FROM `comissao-prontuario.prontuarios_dados.detalhes_respostas`
+  FROM `comissao-prontuario.prontuarios_dados.silver_detalhes_respostas`
   GROUP BY id_resposta, codigo_base
 )
 SELECT R.id_resposta,
@@ -15,9 +15,9 @@ SELECT R.id_resposta,
        R.setor_avaliado,
        D.tipo_avaliacao,
        D.tema_formatado,
-       D. pergunta_formatada,
+       D.pergunta_formatada,
        P.resposta_conformidade,
        P.observacao_texto
-FROM `comissao-prontuario.prontuarios_dados.respostas` AS R
+FROM `comissao-prontuario.prontuarios_dados.silver_respostas` AS R
 INNER JOIN detalhes_pivot AS P ON R.id_resposta = P.id_resposta
 LEFT JOIN `comissao-prontuario.prontuarios_dados.dim_perguntas` AS D ON P.codigo_base = D.codigo_base

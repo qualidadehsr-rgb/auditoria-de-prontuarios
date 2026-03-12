@@ -1,9 +1,9 @@
-MERGE `comissao-prontuario.prontuarios_dados.detalhes_respostas` AS T
+MERGE `comissao-prontuario.prontuarios_dados.silver_detalhes_respostas` AS T
 USING (
 WITH ponte AS(
 SELECT B.*,S.id_resposta
 FROM `comissao-prontuario.prontuarios_dados.bronze_legado_respostas` AS B
-INNER JOIN `comissao-prontuario.prontuarios_dados.respostas` AS S
+INNER JOIN `comissao-prontuario.prontuarios_dados.silver_respostas` AS S
 ON B.`numAtendimento'` = S.numero_atendimento AND
     B.`nomeAvaliador'`= S.nome_avaliador AND
     B.`setorAvaliado'`= S.setor_avaliado AND
