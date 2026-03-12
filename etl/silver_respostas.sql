@@ -1,4 +1,4 @@
-MERGE `comissao-prontuario.prontuarios_dados.respostas` AS T
+MERGE `comissao-prontuario.prontuarios_dados.silver_respostas` AS T
 USING(
 
 WITH base_respostas AS (

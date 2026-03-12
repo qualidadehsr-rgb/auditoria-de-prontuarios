@@ -29,13 +29,26 @@ const bigqueryClient = new BigQuery({projectId: 'comissao-prontuario', credentia
 
 //crianda variáveis globais para o dataset, tabela de resposta, tabela de detalhes e tabela de configurações
 const BQ_DATASET_ID = 'prontuarios_dados';
-const BQ_RESPOSTAS_TABLE_ID = 'respostas';
-const BQ_DETALHES_TABLE_ID = 'detalhes_respostas';
+const BQ_RESPOSTAS_TABLE_ID = 'silver_respostas';
+const BQ_DETALHES_TABLE_ID = 'silver_detalhes_respostas';
 const BQ_CONFIG_TABLE_ID = 'configuracoes';
 
 //Configurando o servidor web (express)
 app.use(express.json()); //servidor lê os dados que o HTML enviar
 app.use(express.static('public')); //informa o servidor que os arquivos HTML e CSS ficaram em uma pasta 'public'
+
+// --- MIDDLEWARE DE OBSERVABILIDADE (LOGS ESTRUTURADOS) ---
+app.use((req, res, next) => {
+  req.request_id = uuidv4(); // Injeta o ID único da requisição
+  console.log(JSON.stringify({
+    severity: 'INFO',
+    request_id: req.request_id,
+    method: req.method,
+    url: req.url,
+    message: 'Requisição recebida'
+  }));
+  next();
+});
 
 //API #1 BUSCA DINÂMICA (Setores e Especialidades)
 
@@ -77,12 +90,16 @@ app.get('/api/get-options', async(req, res) => {
     res.status(200).json(options);
 
   } catch (error) {
-    //captura erro de comunicação com o banco de dados
-    console.error('ERRO na API get-options:', error);
+    console.error(JSON.stringify({
+      severity: 'ERROR',
+      request_id: req.request_id,
+      endpoint: '/api/get-options',
+      message: 'Erro interno ao buscar opções',
+      error_detail: error.message
+    }));
     res.status(500).json({message: 'Erro interno ao buscar opções.'});
   }
-  });
-
+});
 
 //API #2 ROTA PARA SALVAR
 app.post('/api/salvar-dados', async(req, res) => {
@@ -127,13 +144,16 @@ app.post('/api/salvar-dados', async(req, res) => {
     res.status(200).json({message: 'Avaliação salva com sucesso no BigQuery!'});
 
   } catch (error) {
-    //captura erro de comunicação com o banco de dados
-    console.error('ERRO na API:', error);
+    console.error(JSON.stringify({
+      severity: 'ERROR',
+      request_id: req.request_id,
+      endpoint: '/api/salvar-dados',
+      message: 'Erro ao salvar avaliação',
+      error_detail: error.message
+    }));
     res.status(500).json({message: 'Erro ao salvar avaliação.'});
   }
 });
-
-
 
 
 //ligando o servidor na porta do servidor ou a 3000 localmente
