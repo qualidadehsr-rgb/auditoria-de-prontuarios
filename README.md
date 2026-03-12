@@ -22,31 +22,56 @@ graph TD
 
     subgraph "2. Ingestão ELT"
         C[API Node.js]
-        D[Pipeline Python]
+        D[Pipeline Python / GitHub Actions]
     end
 
-    subgraph "3. Data Warehouse (BigQuery)"
-        E[(Bronze: Raw Data)]
-        F[(Silver: Modelagem EAV)]
-        G[(Gold: Semântica & SSOT)]
+    subgraph "3. Camada Bronze (Raw Data)"
+        E[(respostas_brutas)]
+        F[(detalhes_respostas_brutas)]
     end
 
-    subgraph "4. BI"
-        H[Looker Studio]
+    subgraph "4. Camada Silver (Curated / EAV)"
+        G[(silver_respostas)]
+        H[(silver_detalhes_respostas)]
     end
 
-    A -->|Near-Real-Time| C
-    B -->|Batch Actions| D
+    subgraph "5. Camada Gold (Semântica / SSOT)"
+        I[(dim_perguntas - Dicionário CSV)]
+        J{{gold_auditorias_consolidadas - View}}
+    end
+
+    subgraph "6. Consumo (BI)"
+        K[Looker Studio / Dashboards]
+    end
+
+    %% Relacionamentos e Fluxos
+    A -->|Near-Real-Time / JSON| C
+    B -->|Carga Batch| D
     
-    C --> E
-    D --> E
+    C -->|Idempotência / Merge| E
+    C -->|Unpivot / Merge| F
+    D -->|Carga Histórica| E
+    D -->|Carga Histórica| F
     
-    E -->|Tipagem/Idempotência| F
-    F -->|Pivot/Docs-as-Code| G
-    G --> H
+    E -->|Tipagem e Deduplicação| G
+    F -->|Tipagem e Deduplicação| H
     
-    classDef bq fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
-    class E,F,G bq;
+    G -->|JOIN Cabeçalho| J
+    H -->|Pivot Condicional| J
+    I -->|"Tradução Labels (LEFT JOIN)"| J
+    
+    J -->|Leitura Direta Analítica| K
+    
+    %% Estilização do Diagrama
+    classDef bronze fill:#CD7F32,stroke:#333,stroke-width:2px,color:#fff;
+    classDef silver fill:#C0C0C0,stroke:#333,stroke-width:2px,color:#000;
+    classDef gold fill:#FFD700,stroke:#333,stroke-width:2px,color:#000;
+    classDef view fill:#f9f,stroke:#333,stroke-width:2px;
+    
+    class E,F bronze;
+    class G,H silver;
+    class I gold;
+    class J view;
 ```
 
 ## 3. Destaques da Engenharia (Ponta a Ponta)
@@ -63,6 +88,10 @@ graph TD
    - Extração que resolve *Shape Errors* na memória RAM usando `Polars` e `BytesIO`, orquestrado via GitHub Actions em instâncias efêmeras (Linux) a cada 6 horas.
 6. **API com "Fail Fast"**:
    - O backend em Node.js valida chaves de serviço e variáveis de ambiente no *boot*, impedindo que a aplicação suba "cega" e receba tráfego se não conseguir se conectar ao Data Warehouse.
+7. **Observabilidade e Logs Estruturados**:
+   - API Node.js implementada com logs em JSON e `request_id`, permitindo rastreio total desde o clique do auditor até a gravação no banco. 
+8. **Governança no Front-end**:
+   - Validação dinâmica de datas (Mês Anterior/Atual) para impedir a entrada de "lixo" cronológico no DW. 
 
 ## 4. Métricas de Impacto e Valor
 
@@ -76,21 +105,32 @@ graph TD
 - **Software Engineering (API/Web)**: Node.js, Express.js, HTML5/JS Vanilla.
 - **Orquestração & CI/CD**: GitHub Actions (Cron Jobs), Gitflow simplificado.
 - **Data Visualization**: Looker Studio.
+- **Observabilidade:** Logs Estruturados JSON (Severity-based).
 
 ## 6. Documentação e Decisões
 Este projeto adota o padrão de **Architecture Decision Records (ADRs)** para rastreabilidade técnica. Acesse o histórico na pasta `docs/adr/`. 
 Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Changelog](./CHANGELOG.md).
 
 ## 7. Próximos Passos (Engineering Roadmap)
-- [x] Construir transformações SQL na Camada Silver (BigQuery) para tipagem e limpeza dos dados da Camada Bronze.
-- [x] Desenvolver pipeline com `UNPIVOT` para transformar mais de 400 colunas brutas no formato EAV, garantindo a carga histórica.
-- [x] **Camada Gold (Semantic Layer & Data Catalog):** Implementar extração automatizada de metadados do Front-end (Docs-as-Code) e Pivot Condicional para consumo otimizado no Looker Studio.
-- [ ] **FinOps & Performance:** Aplicar Particionamento (Partitioning) e Clusterização nas tabelas do BigQuery para otimização de custos e alta performance analítica.
-- [ ] **Data Quality:** Implementar testes de *schema* + regras de domínio + assertivas SQL na Camada Silver (via dbt ou BigQuery Data Quality).
-- [ ] **Testes de Contrato:** Validar payload de entrada na API (Schema Validation) e automatizar testes de idempotência no CI/CD.
-- [ ] **Observabilidade:** Implementar logs de aplicação estruturados na API (ex: Winston/Morgan) com injeção de `request_id` para correlação de eventos.
+
+### FinOps & Performance Avançada (CONCLUÍDO)
+- [x] **Modelagem Silver EAV:** Normalização completa das tabelas `silver_respostas` e `silver_detalhes_respostas`.
+- [x] **Dicionário de Dados:** Documentação técnica de todos os campos e metadados.
+- [x] **Arquitetura de Views:** Implementação da Camada Gold com Pivot Condicional.
+
+### Governança Ativa & Observabilidade (EM ANDAMENTO)
+- [x] **Observabilidade na API:** Logs estruturados com `request_id` implementados.
+- [x] **Governança de Dados (Front):** Trava dinâmica de datas no calendário.
+- [ ] **Validação de Contrato (Schema Validation):** Bloqueio de payloads inválidos na API.
+- [ ] **Data Masking (LGPD):** Mascaramento dinâmico de dados sensíveis na View Gold.
+- [ ] **Qualidade de Dados (Data Quality Tests):** Implementar testes de integridade. Integrar dbt para alertar se um payload da API vier com nulos onde não deveria.
+
+
+### Entrega de Valor & Data Discovery (PRÓXIMA ETAPA)
+- [ ] **Dashboard Base no Looker Studio:** Conexão da View Gold e criação de KPIs de conformidade.
+- [ ] **Data Security (IAM):** Configuração de permissões Read-Only para a conta de serviço do BI.
 
 ---
 ### Desenvolvido por:
 **Ediney Magalhães**
-*Analytics Engineer / Data Engineer / Estatístico*
+#### *Analytics Engineer / Data Engineer / Estatístico*
