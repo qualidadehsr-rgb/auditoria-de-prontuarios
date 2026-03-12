@@ -37,8 +37,8 @@ graph TD
     end
 
     subgraph "4. Camada Silver (Curated / EAV)"
-        G[(respostas)]
-        H[(detalhes_respostas)]
+        G[(silver_respostas)]
+        H[(silver_detalhes_respostas)]
     end
 
     subgraph "5. Camada Gold (Semântica / SSOT)"
@@ -90,6 +90,8 @@ Responsável por captar os dados preenchidos ativamente pelos auditores no siste
 * **API Middleware:** Realiza a sanitização e o *Unpivot* do payload JSON para o padrão EAV (Entity-Attribute-Value).
 * **Concorrência e Integridade:** Geração de **UUIDv4** para cada auditoria na origem e relacionamento *header/detail*. Isso garante a integridade e permite estratégias de deduplicação (Idempotência via `MERGE`) na camada Silver, eliminando perdas por concorrência de acessos simultâneos.
 * **Conexão de Banco:** Utiliza a BigQuery Streaming API para reduzir a latência de disponibilidade analítica. Possui o padrão "Fail Fast" na inicialização para garantir a presença das variáveis de ambiente.
+* **Observabilidade e Rastreabilidade:** Implementação de logs estruturados em JSON com `request_id` (UUIDv4) injetado em cada requisição, permitindo correlação de eventos entre o Front-end, API e BigQuery.
+* **Validação de Negócio na Origem:** Regras dinâmicas de restrição de datas (D-1 e Mês Atual) para garantir a integridade temporal dos dados antes da ingestão.
 
 ### 2.2. Ingestão em Lote (Data Engineering / ELT)
 Responsável por garantir a preservação histórica e a sincronização de dados lançados via folhas de cálculo legadas.
@@ -118,3 +120,6 @@ Para entender o contexto de "por que" certas tecnologias ou padrões foram escol
 * [ADR 0004: Adoção da Arquitetura Medalhão e Ingestão com Python](./docs/adr/0004-arquitetura-medalhao-etl.md)
 * [ADR 0005: Modelagem EAV para superação do 'Wide Table Problem' no Legado](./docs/adr/0005-modelagem-eav-para-dados-legados.md)
 * [ADR 0006: Implementação da Camada Gold e Dicionário de Metadados via Python](./docs/adr/0006-camada-gold-e-dicionario-metadados.md)
+* [ADR 0007: Implementação de Observabilidade e Logs Estruturados](./docs/adr/0007-observabilidade-logs-estruturados.md)
+* [ADR 0008: Refatoração da Camada Silver para Modelo EAV Normalizado](./docs/adr/0008-refatoracao-camada-silver-eav.md)
+* [ADR 0009: Validação Dinâmica de Datas no Front-end](./docs/adr/0009-validacao-dinamica-datas-frontend.md)
