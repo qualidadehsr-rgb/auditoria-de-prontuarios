@@ -28,9 +28,15 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Camada Gold (Semântica):** Criação da view `gold_auditorias_consolidadas` no BigQuery, aplicando Pivot Condicional para resolver a modelagem EAV da camada Silver, agrupando `resposta_conformidade` e `observacao_texto` na mesma linha.
 - **Extrator de Metadados (Python):** Script `scripts/extrai_dicionario_real.py` para converter o `ESTRUTURA_FORMULARIO` do front-end em um Dicionário de Dados plano (`dicionario_oficial.csv`), atuando como *Single Source of Truth* (Docs-as-Code).
 - **Documentação de Arquitetura:** Escrita da ADR 0006 justificando a adoção da Camada Gold via Python em vez de manipulação Regex no SQL.
+<<<<<<< HEAD
+- **(Front-end):**
+    - Validação dinâmica no campo de data da avaliação (restrição ao mês atual e anterior).
+    - Bloqueio de submissão para datas futuras.
+=======
 - **(Database):** Nova arquitetura da **Camada Silver** normalizada (Tabelas: `silver_respostas` e `silver_detalhes_respostas`).
 - Scripts DDL para criação de tabelas com tipagem forte no BigQuery.
 - **Dicionário de Dados** oficial documentando todas as colunas, chaves e metadados.
+>>>>>>> 85477e7118a0382baf5de797da62ce8da700e17c
 
 ### Alterado
 - **Dicionário de Dados:** A tabela `dim_perguntas` no BigQuery foi substituída. Deixou de usar formatação instável via Regex (`REGEXP_REPLACE`) e passou a consumir diretamente o `dicionario_oficial.csv`, garantindo 100% de fidelidade com as perguntas de negócio da interface.
