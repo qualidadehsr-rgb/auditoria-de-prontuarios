@@ -121,7 +121,7 @@ Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Change
 ### Governança Ativa & Observabilidade (EM ANDAMENTO)
 - [x] **Observabilidade na API:** Logs estruturados com `request_id` implementados.
 - [x] **Governança de Dados (Front):** Trava dinâmica de datas no calendário.
-- [ ] **Validação de Contrato (Schema Validation):** Bloqueio de payloads inválidos na API.
+- [x] **Validação de Contrato (Schema Validation):** Bloqueio de payloads inválidos na API.
 - [ ] **Data Masking (LGPD):** Mascaramento dinâmico de dados sensíveis na View Gold.
 - [ ] **Qualidade de Dados (Data Quality Tests):** Implementar testes de integridade. Integrar dbt para alertar se um payload da API vier com nulos onde não deveria.
 

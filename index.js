@@ -102,9 +102,20 @@ app.get('/api/get-options', async(req, res) => {
 });
 
 //API #2 ROTA PARA SALVAR
+//lista de requisitos para verificação antes de salvar no BQ
+
 app.post('/api/salvar-dados', async(req, res) => {
   try {
     const dadosFormulario = req.body; //usa o arquivo json do front-end
+    const listaRequisitos = ['nomeEmpresa', 'nomeAvaliador', 'dataAvaliacao',
+                        'setorAvaliado', 'numAtendimento', 'tipoProntuario',
+                        'especialidade', 'tipoAvaliacao'];
+    for (const campo of listaRequisitos){
+      if (!dadosFormulario[campo] || dadosFormulario[campo] == ''){
+        return res.status(400).json({
+          message: `Erro de validação: O campo ${campo} é obrigatório e não foi enviado!`});
+        }
+      }
     const idResposta = uuidv4(); //gera ID único para cada resposta
     const dataSubmissao = new Date().toISOString(); //converte a data/hora para string
 

@@ -11,6 +11,12 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.8.0] - 2026-03-13
+
+### Adicionado (API)
+- **Validação de Contrato (Schema Validation):** Criação de segurança/middleware na rota POST para bloquear pacotes vazios ou sem campos obrigatórios, protegendo a ingestão na Camada Bronze/Silver.
+
+
 ## [1.7.0] - 2026-03-12
 
 ### Adicionado (API)
