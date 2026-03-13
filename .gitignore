@@ -136,3 +136,5 @@ dist
 venv/
 __pycache__/
 *.pyc
+
+comissao-prontuario-5be6d72320fa.json
