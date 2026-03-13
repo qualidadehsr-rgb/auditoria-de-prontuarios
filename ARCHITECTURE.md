@@ -92,6 +92,7 @@ Responsável por captar os dados preenchidos ativamente pelos auditores no siste
 * **Conexão de Banco:** Utiliza a BigQuery Streaming API para reduzir a latência de disponibilidade analítica. Possui o padrão "Fail Fast" na inicialização para garantir a presença das variáveis de ambiente.
 * **Observabilidade e Rastreabilidade:** Implementação de logs estruturados em JSON com `request_id` (UUIDv4) injetado em cada requisição, permitindo correlação de eventos entre o Front-end, API e BigQuery.
 * **Validação de Negócio na Origem:** Regras dinâmicas de restrição de datas (D-1 e Mês Atual) para garantir a integridade temporal dos dados antes da ingestão.
+* **Schema Validation (Contrato de Dados):** Middleware nativo que atua como barreira de segurança, aplicando o padrão Fail Fast para recusar payloads com campos obrigatórios ausentes antes da comunicação com o banco de dados.
 
 ### 2.2. Ingestão em Lote (Data Engineering / ELT)
 Responsável por garantir a preservação histórica e a sincronização de dados lançados via folhas de cálculo legadas.
@@ -123,3 +124,4 @@ Para entender o contexto de "por que" certas tecnologias ou padrões foram escol
 * [ADR 0007: Implementação de Observabilidade e Logs Estruturados](./docs/adr/0007-observabilidade-logs-estruturados.md)
 * [ADR 0008: Refatoração da Camada Silver para Modelo EAV Normalizado](./docs/adr/0008-refatoracao-camada-silver-eav.md)
 * [ADR 0009: Validação Dinâmica de Datas no Front-end](./docs/adr/0009-validacao-dinamica-datas-frontend.md)
+* [ADR 0010: Implementação de Validação de Contrato (Schema Validation) Nativa na API](./docs/adr/0010-validacao-contrato-backend.md)
