@@ -92,6 +92,8 @@ graph TD
    - API Node.js implementada com logs em JSON e `request_id`, permitindo rastreio total desde o clique do auditor até a gravação no banco. 
 8. **Governança no Front-end**:
    - Validação dinâmica de datas (Mês Anterior/Atual) para impedir a entrada de "lixo" cronológico no DW. 
+9. **Privacy by Design (LGPD & Data Masking)**:
+   - Implementação de barreira dupla de privacidade a custo zero. No front-end, "Nudges" visuais orientam os auditores a não inserir dados pessoais. No Data Warehouse (Camada Gold), um Censor Matemático (Regex) mascara automaticamente (`[CENSURADO]`) CPFs, RGs e números de prontuários inseridos por engano nos campos de texto livre.
 
 ## 4. Métricas de Impacto e Valor
 
@@ -122,7 +124,7 @@ Consulte também o nosso [Guia de Contribuição](./CONTRIBUTING.md) e o [Change
 - [x] **Observabilidade na API:** Logs estruturados com `request_id` implementados.
 - [x] **Governança de Dados (Front):** Trava dinâmica de datas no calendário.
 - [x] **Validação de Contrato (Schema Validation):** Bloqueio de payloads inválidos na API.
-- [ ] **Data Masking (LGPD):** Mascaramento dinâmico de dados sensíveis na View Gold.
+- [x] **Data Masking (LGPD):** Mascaramento dinâmico de dados sensíveis na View Gold.
 - [ ] **Qualidade de Dados (Data Quality Tests):** Implementar testes de integridade. Integrar dbt para alertar se um payload da API vier com nulos onde não deveria.
 
 

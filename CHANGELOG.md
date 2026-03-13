@@ -15,6 +15,9 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 
 ### Adicionado (API)
 - **Validação de Contrato (Schema Validation):** Criação de segurança/middleware na rota POST para bloquear pacotes vazios ou sem campos obrigatórios, protegendo a ingestão na Camada Bronze/Silver.
+- **Conformidade LGPD (Data Masking):** Implementação de dupla barreira de proteção de dados sensíveis (Privacy by Design).
+  - *Front-end:* Inclusão de "Nudge" visual (aviso de privacidade) no campo de observação para evitar a inserção do nome do paciente.
+  - *Data Warehouse:* Adição de Censor Matemático (`REGEXP_REPLACE`) na Camada Gold (`gold_view_consolidada`) para mascarar dinamicamente (`[CENSURADO]`) sequências numéricas (CPFs, RGs, Telefones) inseridas acidentalmente nos textos livres.
 
 
 ## [1.7.0] - 2026-03-12

@@ -17,7 +17,7 @@ SELECT R.id_resposta,
        D.tema_formatado,
        D.pergunta_formatada,
        P.resposta_conformidade,
-       P.observacao_texto
+       REGEXP_REPLACE(P.observacao_texto, r'[0-9]{4,}', '[CENSURADO]') AS observacao_texto
 FROM `comissao-prontuario.prontuarios_dados.silver_respostas` AS R
 INNER JOIN detalhes_pivot AS P ON R.id_resposta = P.id_resposta
 LEFT JOIN `comissao-prontuario.prontuarios_dados.dim_perguntas` AS D ON P.codigo_base = D.codigo_base
