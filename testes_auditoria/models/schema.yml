@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: prontuarios_dados
+    database: comissao-prontuario
+    tables:
+      - name: silver_respostas
+        columns:
+          - name: id_resposta
+            tests:
+              - unique
+              - not_null
+      
+      - name: silver_detalhes_respostas
+        columns:
+          - name: id_resposta
+            tests:
+              - not_null
+          - name: valor_resposta
+            tests:
+              - accepted_values:
+                  arguments:
+                    values: ['Conforme', 'Não conforme', 'N/A']
+                  config:
+                    where: "nome_pergunta LIKE '%_Resp%' AND LENGTH(valor_resposta) < 20 AND valor_resposta NOT IN ('PORTA-ECG', 'tev')"
