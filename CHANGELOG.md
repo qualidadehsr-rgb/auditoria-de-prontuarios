@@ -18,6 +18,10 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Conformidade LGPD (Data Masking):** Implementação de dupla barreira de proteção de dados sensíveis (Privacy by Design).
   - *Front-end:* Inclusão de "Nudge" visual (aviso de privacidade) no campo de observação para evitar a inserção do nome do paciente.
   - *Data Warehouse:* Adição de Censor Matemático (`REGEXP_REPLACE`) na Camada Gold (`gold_view_consolidada`) para mascarar dinamicamente (`[CENSURADO]`) sequências numéricas (CPFs, RGs, Telefones) inseridas acidentalmente nos textos livres.
+- **Qualidade de Dados (Data Quality com dbt):** Integração do `dbt` (Data Build Tool) como auditor independente da base de dados (Defesa em Profundidade).
+    - Implementação de Contratos de Dados (Data Contracts) na Camada Prata (`silver_respostas` e `silver_detalhes_respostas`) através do ficheiro declarativo `schema.yml`.
+    - Adição de testes automatizados (`not_null`, `unique`, `accepted_values`) para validar a integridade das submissões da API.
+    - Criação de uma "Linha de Base" (Baseline) para isolar e documentar a dívida técnica de registos históricos inconsistentes através de filtros SQL nativos.
 
 
 ## [1.7.0] - 2026-03-12
