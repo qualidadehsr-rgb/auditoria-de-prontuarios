@@ -41,6 +41,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -137,4 +138,4 @@ venv/
 __pycache__/
 *.pyc
 
-comissao-prontuario-5be6d72320fa.json
+comissao-prontuario-*.json
