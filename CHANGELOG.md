@@ -10,6 +10,18 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+
+## [1.10.0] - 2026-03-17
+### Adicionado (FinOps)
+- **Cálculo de Taxa de Conformidade:** Implementação de lógica binária (`CASE WHEN`) na Camada Gold (`gold_view_consolidada`) para criação das métricas `qtde_conforme` e `qtde_valida`. Esta abordagem transfere a carga de processamento para o BigQuery, permitindo que o Looker Studio realize apenas somas simples, reduzindo o custo de latência e processamento do dashboard.
+
+### Segurança (Git)
+- **Proteção de Credenciais:** Atualização do ficheiro `.gitignore` com padrões wildcard (`comissao-prontuario-*.json`) para prevenir o rastreio acidental de chaves de Contas de Serviço (JSON) do Google Cloud, reforçando a conformidade com a política de segurança de credenciais.
+
+### Alterado (Documentação)
+- Início da revisão da taxonomia das tabelas para o padrão Medalhão e mapeamento de dependências para futura automação via Dataform.
+
+
 ## [1.9.0] - 2026-03-17
 
 ### Adicionado (Security)
