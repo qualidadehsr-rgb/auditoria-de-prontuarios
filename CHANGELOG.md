@@ -10,6 +10,11 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.9.0] - 2026-03-17
+
+### Adicionado (Security)
+- **IAM (Privilégio Mínimo):** Criação de Service Account isolada (`looker-studio-bi`) no Google Cloud para consumo de BI, configurada estritamente com permissões de Leitura (`dataViewer`) e Execução de Consultas (`jobUser`), mitigando riscos de alteração acidental na base de dados.
+
 
 ## [1.8.0] - 2026-03-13
 
