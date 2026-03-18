@@ -32,6 +32,7 @@ const BQ_DATASET_ID = 'prontuarios_dados';
 const BQ_RESPOSTAS_TABLE_ID = 'silver_respostas';
 const BQ_DETALHES_TABLE_ID = 'silver_detalhes_respostas';
 const BQ_CONFIG_TABLE_ID = 'configuracoes';
+const BQ_BRONZE_WEB_TABLE_ID = 'bronze_respostas_web';
 
 //Configurando o servidor web (express)
 app.use(express.json()); //servidor lê os dados que o HTML enviar
@@ -117,9 +118,17 @@ app.post('/api/salvar-dados', async(req, res) => {
         }
       }
     const idResposta = uuidv4(); //gera ID único para cada resposta
-    const dataSubmissao = new Date().toISOString(); //converte a data/hora para string
+    const dataSubmissao = new Date().toISOString();
 
-    //mapeando cabeçado do formulário
+    //ID e o dicionário bruto
+    const linhaBronze = {
+    id_submissao: idResposta,
+    conteudo_bruto: bigqueryClient.json(dadosFormulario)
+  };
+    // Salva na bronze_respostas_web (data_hora inserido pelo BigQuery)
+    await bigqueryClient.dataset(BQ_DATASET_ID).table(BQ_BRONZE_WEB_TABLE_ID).insert([linhaBronze]);
+
+    // O Cabeçalho
     const camposComuns = ['nomeEmpresa', 'nomeAvaliador', 'dataAvaliacao', 'setorAvaliado', 'numAtendimento', 'tipoProntuario', 'especialidade', 'tipoAvaliacao'];
     
     //objeto para salvar as respostas no banco
@@ -134,14 +143,16 @@ app.post('/api/salvar-dados', async(req, res) => {
                             especialidade: dadosFormulario.especialidade,
                             tipo_avaliacao: dadosFormulario.tipoAvaliacao
     };
-
     //lista vazia com os detalhes das perguntas
     const linhasDetalhes = [];
 
     //criando um dicionário com respostas e detalhes
     for (const [key, value] of Object.entries(dadosFormulario)) {
       if (!camposComuns.includes(key) && value !== "") {
-        linhasDetalhes.push({id_detalhe: uuidv4(), id_resposta: idResposta, nome_pergunta: key, valor_resposta: String(value)});
+        linhasDetalhes.push({id_detalhe: uuidv4(),
+                             id_resposta: idResposta,
+                             nome_pergunta: key,
+                             valor_resposta: String(value)});
       }
     }
     //enviando para o bigquery
