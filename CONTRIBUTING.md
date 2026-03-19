@@ -43,6 +43,7 @@ Se você for trabalhar no pipeline de extração ou metadados:
 1. **Centralização no dbt:** Toda a responsabilidade de transformação, unpivot de JSON (`JSON_VALUE`), padronização e testes ACID pertence ao dbt. Não crie rotinas de banco de dados fora dele.
 2. **Lógica FinOps (Métricas):** As regras de cálculo binário (`qtde_conforme` e `qtde_valida`) devem ser materializadas nos modelos `.sql` da camada Gold do dbt. Não mova cálculos complexos para o Looker Studio para garantir performance e baixo custo de leitura.
 3. **Idempotência:** Não é mais necessário escrever comandos `MERGE` complexos na mão. A idempotência é garantida nativamente pelo motor de materialização do dbt (`table`, `view` ou `incremental`).
+4. **Configuração de Materialização:** Sempre defina explicitamente o tipo de materialização no topo do arquivo SQL (ex: `materialized='table'`). Evite o uso de `SELECT *` em modelos de staging para prevenir erros de colunas duplicadas ou schemas corrompidos.
 
 ### 5. Fluxo de Trabalho (Engenharia de Analytics com dbt)
 
@@ -53,6 +54,7 @@ Todo o desenvolvimento das camadas de transformação de dados (Silver e Gold) �
 3. **Desenvolva e Teste:** Escreva seus modelos (`.sql`), arquivos de configuração (`.yml`) e clique em *Run* ou *Build* no dbt Cloud para testá-los no BigQuery (schema de desenvolvimento).
 4. **Commit & Sync:** Após validar, realize o commit através da interface do dbt Cloud com uma mensagem clara sobre o que foi alterado.
 5. **Pull Request (PR):** Clique no botão do dbt Cloud para abrir um PR no GitHub. Um revisor (ou você mesmo, após revisão criteriosa) deve aprovar (Merge) o código para a `main`.
+6. **Sincronização Local:** Após realizar o Merge no GitHub, lembre-se de voltar ao VS Code ou ao dbt Cloud e realizar o "Pull from Remote/Main" para garantir que seu ambiente local não fique defasado.
 
 ---
 

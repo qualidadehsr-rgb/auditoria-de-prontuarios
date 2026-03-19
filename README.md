@@ -49,11 +49,11 @@ graph TD
     B -->|Carga Batch| D
     
     C -->|Idempotência / Merge| E
-    C -->|Unpivot / Merge| F
+    C -->|Carga JSON Bruto| F
     D -->|Carga Histórica| E
     D -->|Carga Histórica| F
     
-    E -->|Tipagem e Deduplicação| G
+    E -->|dbt: Extração e Tipagem| G
     F -->|Tipagem e Deduplicação| H
     
     G -->|JOIN Cabeçalho| J
@@ -79,7 +79,7 @@ graph TD
 2. **Modelagem EAV (Verticalização)**: Conversão de 600+ colunas horizontais em um modelo vertical. O banco cresce em linhas, permitindo novas perguntas sem alterar o schema (ADR 0005).
 3. **Métricas Binárias (Estratégia FinOps)**: Implementação de lógica $0$ e $1$ (`qtde_conforme` e `qtde_valida`) diretamente no SQL. Isso elimina cálculos pesados de texto no Looker Studio, reduzindo a latência e o custo de processamento (ADR 0014).
 4. **Docs-as-Code (SSOT)**: Extração automatizada de metadados do Front-end via Python (AST), garantindo que o BI exiba exatamente o que o médico vê no formulário.
-5. **Data Quality & Contratos (dbt)**: Uso do **dbt (Data Build Tool)** para validar a integridade da Camada Silver (`not_null`, `unique`) e isolar dívidas técnicas do legado.
+5. **Data Quality & Contratos (dbt)**: Implementação do dbt para orquestrar a extração tipada de campos complexos (JSON), garantindo que o dado chegue limpo e materializado para a camada analítica. O uso de testes automatizados assegura a integridade das chaves primárias e campos obrigatórios antes do consumo no BI.
 6. **Privacy by Design (LGPD)**: Mascaramento dinâmico via Regex (`[CENSURADO]`) na Camada Gold para proteger dados sensíveis inseridos em campos de texto livre.
 7. **Segurança e Privilégio Mínimo**: Implementação de política de IAM com Service Accounts dedicadas e restritas para o consumo do Looker Studio (ADR 0013).
 8. **Observabilidade**: API Node.js com logs estruturados em JSON e `request_id` para rastreio total do ciclo de vida do dado.
@@ -110,10 +110,27 @@ Este projeto utiliza **ADRs** para rastreabilidade técnica. Consulte a pasta `d
 - [x] **Data Masking (LGPD):** Mascaramento de dados sensíveis.
 - [x] **Métricas FinOps:** Lógica binária 0/1 implementada no DW.
 - [x] **Security (IAM):** Conta de serviço com privilégio mínimo para o BI.
-
-### Automação e Escalabilidade (EM ANDAMENTO)
-- [ ] **Dataform/dbt Cloud:** Migração das Scheduled Queries para um pipeline orquestrado de ponta a ponta.
-- [ ] **União do Legado:** Consolidação automática do histórico pré-2026 na Camada Silver.
+### Fase 1: Fundação (Setup & Conexão) [CONCLUÍDO]
+- [x] Criar conta no dbt Cloud.
+- [x] Conectar dbt ao GitHub e ao BigQuery via Service Account.
+- [x] Resolver travas de Billing/Sandbox no Google Cloud.
+### Fase 2: O Ponto de Partida (Sources & Bronze) [CONCLUÍDO]
+- [x] Configurar `sources.yml` para mapear os dados brutos.
+- [x] Validar leitura das tabelas `bronze_respostas_web` e `bronze_legado_respostas`.
+### Fase 3: A Grande Transformação (Silver) [EM ANDAMENTO]
+- [x] Modelo SQL para extração e tipagem do JSON (`stg_bronze_respostas_web`).
+- [ ] Modelo SQL com `UNPIVOT` para as 600 colunas do legado.
+- [ ] Consolidação via `UNION ALL` nas tabelas `silver_respostas` e `silver_detalhes`.
+## Fase 4: Controle de Qualidade (Testes) [PENDENTE]
+- [ ] Configurar testes de unicidade e nulidade no `schema.yml`.
+- [ ] Validar integridade dos UUIDs gerados.
+## Fase 5: Entrega de Valor (Gold) [PENDENTE]
+- [ ] Migrar `gold_auditorias_consolidadas` para o dbt.
+- [ ] Aplicar lógica binária (0/1) e JOIN com dicionário de perguntas.
+### Fase 6: Automação (Jobs e Deploy) [PENDENTE]
+- [ ] Agendar Jobs de execução automática no dbt Cloud.
+## Fase 7: Desacoplamento da API (Opcional) [PENDENTE]
+- [ ] Simplificar `index.js` para salvar apenas o JSON bruto, delegando o processamento 100% ao dbt.
 
 ---
 ### Desenvolvido por:
