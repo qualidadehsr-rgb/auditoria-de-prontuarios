@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: comissao-prontuario
+    schema: prontuarios_dados
+    tables:
+      - name: bronze_respostas_web
+      - name: bronze_legado_respostas
