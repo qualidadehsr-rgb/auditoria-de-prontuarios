@@ -1,0 +1,9 @@
+version: 2
+models:
+  - name: stg_bronze_respostas_web
+    columns:
+      - name: id_submissao
+        tests:
+          - unique
+          - not_null
+          
