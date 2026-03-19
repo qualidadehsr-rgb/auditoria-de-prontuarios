@@ -11,6 +11,15 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.11.0] - 2026-03-18
+### Adicionado
+- Inicialização da estrutura padrão de projeto dbt via dbt Cloud (criação de diretórios `models`, `seeds`, arquivo `dbt_project.yml`, etc).
+- Integração do dbt Cloud ao repositório GitHub (`auditoria-de-prontuarios`).
+- Configuração de credenciais de acesso do dbt ao Google BigQuery utilizando a Service Account `dbt-orquestrador`.
+
+### Alterado
+- O fluxo de desenvolvimento de dados passa a ser feito em nuvem (dbt Cloud) e versionado obrigatoriamente via Pull Requests para a `main`.
+
 ## [1.10.0] - 2026-03-17
 ### Adicionado (FinOps)
 - **Cálculo de Taxa de Conformidade:** Implementação de lógica binária (`CASE WHEN`) na Camada Gold (`gold_view_consolidada`) para criação das métricas `qtde_conforme` e `qtde_valida`. Esta abordagem transfere a carga de processamento para o BigQuery, permitindo que o Looker Studio realize apenas somas simples, reduzindo o custo de latência e processamento do dashboard.
