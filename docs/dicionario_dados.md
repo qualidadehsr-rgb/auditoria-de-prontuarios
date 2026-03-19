@@ -21,14 +21,15 @@
 
 ---
 
-## Camada Silver & Padronização
+## Camada Silver & Padronização (Materializada pelo dbt)
+Todas as tabelas desta camada são construídas e testadas exclusivamente pelo dbt. Os dados são extraídos do JSON da camada Bronze (Web) via funções de parsing (`JSON_VALUE`) e unificados com o histórico da Bronze (Legado), aplicando tipagem forte e padronização de nomenclaturas.
 
 ### Tabela: `silver_respostas`
 *Tabela de cabeçalhos das auditorias. Contém os dados demográficos do paciente, identificação do auditor e metadados da submissão.*
 
 | Coluna | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id_resposta | UUID | Chave primária (PK). Gerada automaticamente via `GENERATE_UUID()` ou herdada da API. |
+| id_resposta | UUID | Chave primária (PK). Mapeada diretamente do `id_submissao` (Bronze Web) ou gerada via `surrogate key` pelo dbt para os dados do Legado. |
 | data_submissao | TIMESTAMP | **Campo de Partição**. Carimbo de data/hora de quando a auditoria foi registrada. |
 | nome_empresa | STRING | **Campo de Cluster**. Nome da unidade hospitalar onde a auditoria foi realizada. |
 | nome_avaliador | STRING | **Campo de Cluster**. Nome completo do profissional que realizou a auditoria. |
@@ -46,7 +47,7 @@
 
 | Coluna | Tipo | Chave | Descrição |
 | :--- | :--- | :--- | :--- |
-| id_detalhe | STRING | PK | Identificador único da linha. Gerado via `GENERATE_UUID()` ou herdado da API. |
+| id_detalhe | STRING | PK | Identificador único da linha. Gerado pelo dbt (`hash surrogate key` combinando `id_resposta` + `nome_pergunta`) após o processo de unpivot do JSON e das colunas legadas. |
 | id_resposta | STRING | FK / Cluster | **Chave Estrangeira**. Liga este detalhe ao cabeçalho na tabela `silver_respostas`. |
 | nome_pergunta | STRING | Cluster | O nome técnico da pergunta (conforme o payload JSON ou cabeçalho legado). |
 | valor_resposta | STRING | - | O conteúdo da resposta (pode ser "Conforme", "Não Conforme", "N/A" ou o texto de uma observação). |

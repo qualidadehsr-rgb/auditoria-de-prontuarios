@@ -10,6 +10,16 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.12.0] - 2026-03-19
+### Alterado
+- Fluxo de submissão de dados simplificado para Ingestão Pura.
+
+### Removido
+- Inserção manual nas tabelas `silver_respostas` e `silver_detalhes_respostas` via API Node.js.
+
+### Fixado
+- Risco de quebra de atomicidade (ACID) durante a submissão do formulário.
+
 
 ## [1.11.0] - 2026-03-18
 ### Adicionado
@@ -19,6 +29,7 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 
 ### Alterado
 - O fluxo de desenvolvimento de dados passa a ser feito em nuvem (dbt Cloud) e versionado obrigatoriamente via Pull Requests para a `main`.
+
 
 ## [1.10.0] - 2026-03-17
 ### Adicionado (FinOps)
