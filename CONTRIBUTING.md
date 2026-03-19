@@ -2,7 +2,7 @@
 
 Agradecemos o seu interesse em contribuir com o Sistema de Auditoria de Prontuários. Este documento estabelece as diretrizes para garantir que o código se mantenha organizado, escalável, rastreável e fácil de revisar em nosso ambiente Full-Stack e de Engenharia de Dados.
 
-## 🛡️ Segurança de Credenciais (Crítico)
+## Segurança de Credenciais (Crítico)
 
 Este projeto manipula dados sensíveis e chaves de acesso ao Google Cloud. **Nunca, sob nenhuma circunstância, adicione arquivos JSON de chaves de serviço ao controle de versão (Git).**
 
@@ -28,6 +28,7 @@ Se você for trabalhar no Front-end ou na API REST:
 3. Inicie o servidor local: `node index.js`
 
 > **Atenção:** Qualquer novo payload de auditoria deve gerar um identificador único (UUIDv4) na origem para garantir a rastreabilidade e permitir a deduplicação analítica.
+**Regra de Ouro da Ingestão Pura:** O Node.js atua exclusivamente como transportador. É terminantemente proibido adicionar lógica de fatiamento de payload, tipagem ou criação de regras de negócio nesta camada (backend). O formulário web deve ser salvo integralmente como um objeto JSON fechado (`conteudo_bruto`) na camada Bronze. Toda a transformação ocorrerá no dbt.
 
 ### 3. Ambiente de Dados / ELT Batch e Metadados (Python)
 Se você for trabalhar no pipeline de extração ou metadados:
@@ -36,11 +37,12 @@ Se você for trabalhar no pipeline de extração ou metadados:
 3. Instale as dependências: `pip install -r requirements.txt`
 4. **Regra de Metadados (Docs-as-Code):** Se alterar a constante `ESTRUTURA_FORMULARIO` no Front-end, você **deve** rodar o extrator (`python scripts/extrai_dicionario_real.py`) para manter a Camada Gold e o Dicionário de Dados sincronizados.
 
-### 4. Ambiente de Data Warehouse / Transformações (SQL)
-Se você for trabalhar nas regras de negócio no BigQuery:
-1. Scripts oficiais de Views e Tabelas ficam na pasta `/etl/`.
-2. **Lógica FinOps (Métricas):** Ao alterar a `gold_view_consolidada.sql`, mantenha a lógica binária de conformidade (`qtde_conforme` e `qtde_valida`). Não mova cálculos complexos para o Looker Studio; mantenha-os no SQL para garantir performance e baixo custo de processamento.
-3. **Idempotência:** Utilize sempre comandos `MERGE` para evitar duplicidade de dados em reprocessamentos.
+### 4. Ambiente de Data Warehouse / Transformações (SQL via dbt)
+**Atenção: A criação ou atualização manual de tabelas via scripts soltos ou Node.js está estritamente proibida para as camadas Silver e Gold.**
+
+1. **Centralização no dbt:** Toda a responsabilidade de transformação, unpivot de JSON (`JSON_VALUE`), padronização e testes ACID pertence ao dbt. Não crie rotinas de banco de dados fora dele.
+2. **Lógica FinOps (Métricas):** As regras de cálculo binário (`qtde_conforme` e `qtde_valida`) devem ser materializadas nos modelos `.sql` da camada Gold do dbt. Não mova cálculos complexos para o Looker Studio para garantir performance e baixo custo de leitura.
+3. **Idempotência:** Não é mais necessário escrever comandos `MERGE` complexos na mão. A idempotência é garantida nativamente pelo motor de materialização do dbt (`table`, `view` ou `incremental`).
 
 ### 5. Fluxo de Trabalho (Engenharia de Analytics com dbt)
 
