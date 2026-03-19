@@ -121,7 +121,7 @@ app.post('/api/salvar-dados', async(req, res) => {
     //ID e o dicionário bruto
     const linhaBronze = {
     id_submissao: idResposta,
-    conteudo_bruto: bigqueryClient.json(dadosFormulario)
+    conteudo_bruto: JSON.stringify(dadosFormulario)
   };
     // Salva na bronze_respostas_web (data_hora inserido pelo BigQuery)
     await bigqueryClient.dataset(BQ_DATASET_ID).table(BQ_BRONZE_WEB_TABLE_ID).insert([linhaBronze]);
