@@ -42,6 +42,16 @@ Se você for trabalhar nas regras de negócio no BigQuery:
 2. **Lógica FinOps (Métricas):** Ao alterar a `gold_view_consolidada.sql`, mantenha a lógica binária de conformidade (`qtde_conforme` e `qtde_valida`). Não mova cálculos complexos para o Looker Studio; mantenha-os no SQL para garantir performance e baixo custo de processamento.
 3. **Idempotência:** Utilize sempre comandos `MERGE` para evitar duplicidade de dados em reprocessamentos.
 
+### 5. Fluxo de Trabalho (Engenharia de Analytics com dbt)
+
+Todo o desenvolvimento das camadas de transformação de dados (Silver e Gold) é realizado através do **dbt Cloud**.
+
+1. **Nunca faça commits diretos na `main`:** A branch `main` é protegida e representa o ambiente de produção/oficial.
+2. **Crie uma nova branch no dbt Cloud:** Sempre inicie o trabalho clicando em "Create new branch" a partir da interface do dbt. Use nomes curtos e descritivos (ex: `feature/nova-tabela-gold`, `fix/correcao-regra-negocio`).
+3. **Desenvolva e Teste:** Escreva seus modelos (`.sql`), arquivos de configuração (`.yml`) e clique em *Run* ou *Build* no dbt Cloud para testá-los no BigQuery (schema de desenvolvimento).
+4. **Commit & Sync:** Após validar, realize o commit através da interface do dbt Cloud com uma mensagem clara sobre o que foi alterado.
+5. **Pull Request (PR):** Clique no botão do dbt Cloud para abrir um PR no GitHub. Um revisor (ou você mesmo, após revisão criteriosa) deve aprovar (Merge) o código para a `main`.
+
 ---
 
 ## Padrão de Ramificação (Branching)

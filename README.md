@@ -95,6 +95,9 @@ graph TD
 - **Software Engineering**: Node.js, Express.js, HTML5/JS Vanilla.
 - **Orquestração & CI/CD**: GitHub Actions, Gitflow.
 - **Data Visualization**: Looker Studio.
+- **Armazenamento de Dados:** Google BigQuery (Data Warehouse).
+- **Transformação de Dados (ETL/ELT):** dbt (Data Build Tool) via dbt Cloud.
+- **Versionamento:** Git e GitHub.
 
 ## 6. Documentação e Decisões
 Este projeto utiliza **ADRs** para rastreabilidade técnica. Consulte a pasta `docs/adr/`. Veja também o [Guia de Contribuição](./CONTRIBUTING.md).
