@@ -29,8 +29,6 @@ const bigqueryClient = new BigQuery({projectId: 'comissao-prontuario', credentia
 
 //crianda variáveis globais para o dataset, tabela de resposta, tabela de detalhes e tabela de configurações
 const BQ_DATASET_ID = 'prontuarios_dados';
-const BQ_RESPOSTAS_TABLE_ID = 'silver_respostas';
-const BQ_DETALHES_TABLE_ID = 'silver_detalhes_respostas';
 const BQ_CONFIG_TABLE_ID = 'configuracoes';
 const BQ_BRONZE_WEB_TABLE_ID = 'bronze_respostas_web';
 
@@ -127,40 +125,6 @@ app.post('/api/salvar-dados', async(req, res) => {
   };
     // Salva na bronze_respostas_web (data_hora inserido pelo BigQuery)
     await bigqueryClient.dataset(BQ_DATASET_ID).table(BQ_BRONZE_WEB_TABLE_ID).insert([linhaBronze]);
-
-    // O Cabeçalho
-    const camposComuns = ['nomeEmpresa', 'nomeAvaliador', 'dataAvaliacao', 'setorAvaliado', 'numAtendimento', 'tipoProntuario', 'especialidade', 'tipoAvaliacao'];
-    
-    //objeto para salvar as respostas no banco
-    const linhaRespostas = {id_resposta: idResposta,
-                            data_submissao: dataSubmissao,
-                            nome_empresa: dadosFormulario.nomeEmpresa,
-                            nome_avaliador: dadosFormulario.nomeAvaliador,
-                            data_avaliacao: dadosFormulario.dataAvaliacao ? new Date(dadosFormulario.dataAvaliacao + 'T00:00:00').toISOString().slice(0, 19).replace('T', ' ') : null,
-                            setor_avaliado: dadosFormulario.setorAvaliado,
-                            numero_atendimento: String(dadosFormulario.numAtendimento || ""),
-                            tipo_prontuario: dadosFormulario.tipoProntuario,
-                            especialidade: dadosFormulario.especialidade,
-                            tipo_avaliacao: dadosFormulario.tipoAvaliacao
-    };
-    //lista vazia com os detalhes das perguntas
-    const linhasDetalhes = [];
-
-    //criando um dicionário com respostas e detalhes
-    for (const [key, value] of Object.entries(dadosFormulario)) {
-      if (!camposComuns.includes(key) && value !== "") {
-        linhasDetalhes.push({id_detalhe: uuidv4(),
-                             id_resposta: idResposta,
-                             nome_pergunta: key,
-                             valor_resposta: String(value)});
-      }
-    }
-    //enviando para o bigquery
-    await
-    bigqueryClient.dataset(BQ_DATASET_ID).table(BQ_RESPOSTAS_TABLE_ID).insert([linhaRespostas]);
-    
-    await
-    bigqueryClient.dataset(BQ_DATASET_ID).table(BQ_DETALHES_TABLE_ID).insert(linhasDetalhes);
 
     //mensagem de sucesso
     res.status(200).json({message: 'Avaliação salva com sucesso no BigQuery!'});

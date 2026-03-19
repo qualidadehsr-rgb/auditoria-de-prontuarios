@@ -1,26 +1,30 @@
-# Auditoria de Qualidade de Dados (dbt)
+# Transformação e Qualidade de Dados (dbt)
 
-Este subprojeto contém a suíte de testes de Qualidade de Dados (Data Quality) para a plataforma de Auditoria de Prontuários, construída utilizando o **dbt (Data Build Tool)**.
+Este subprojeto contém o pipeline de transformação (ELT) e a suíte de testes de Qualidade de Dados para a plataforma de Auditoria de Prontuários, construída utilizando o **dbt (Data Build Tool)** via dbt Cloud.
 
 ## Objetivo
-Atuar como um "Auditor Independente" sobre a Camada Prata (`silver`) do nosso Data Warehouse no BigQuery. O objetivo é garantir o padrão de Defesa em Profundidade (Queijo Suíço), barrando dados nulos, duplicados ou valores inválidos que possam ter passado pela API ou por manutenções no banco de dados.
+Atuar como o motor central de processamento de regras de negócio e "Auditor Independente" do Data Warehouse no BigQuery. Com a adoção da arquitetura de **Ingestão Pura**, o dbt é responsável por:
+1. **Extração e Parsing:** Desempacotar dados de formulários que chegam em formato JSON (`conteudo_bruto`) na camada Bronze.
+2. **Transformação (Staging para Silver):** Padronizar e tipar dados oriundos de sistemas web e planilhas legadas.
+3. **Garantia ACID:** Barrar dados nulos, duplicados ou valores inválidos logo na entrada (Staging), garantindo que a camada Silver receba apenas dados consistentes.
+4. **Agregação (Gold):** Materializar métricas de conformidade para alta performance de BI.
 
-## Estrutura do Contrato de Dados (Data Contract)
-Nossos testes não são baseados em scripts complexos, mas sim em regras declarativas.
-* **Arquivo Principal:** O contrato de dados reside em `models/schema.yml`.
-* **Regras Mapeadas:** Testes de unicidade (`unique`), não-nulos (`not_null`) e valores aceitos (`accepted_values`).
-* **Tratamento de Dívida Técnica:** Filtros SQL nativos são utilizados dentro do contrato para isolar e ignorar sujeiras históricas conhecidas (como textos de observação inseridos em campos de resposta múltipla).
+## Estrutura de Modelos e Contratos de Dados
+Nossas transformações e testes são baseados em SQL modular e regras declarativas (YAML).
+* **Camada de Staging (`models/bronze/`):** Modelos como `stg_bronze_respostas_web.sql` que extraem os campos do JSON e padronizam nomenclaturas.
+* **Arquivo de Contrato (`schema.yml`):** Define as expectativas dos dados. 
+* **Regras Mapeadas:** Testes rigorosos de unicidade (`unique`) e não-nulidade (`not_null`) em chaves primárias (ex: UUIDs gerados na origem) e campos extraídos.
 
-## Como executar localmente
+## Como executar
 
-1. Certifique-se de que o seu ambiente virtual Python (`venv`) está ativado.
-2. Certifique-se de que o arquivo `profiles.yml` (no seu diretório de usuário `.dbt`) está apontando para a sua Service Account do Google Cloud.
-3. Entre na pasta do projeto:
+O ambiente oficial de desenvolvimento e orquestração deste projeto é o **dbt Cloud** (conforme ADR 0016).
+
+Para rodar todo o pipeline (construção das tabelas e execução dos testes de contrato) no ambiente de desenvolvimento do dbt Cloud:
+
+1. Abra o IDE do dbt Cloud na sua branch de trabalho.
+2. Na barra de comandos inferior, execute:
    ```bash
-   cd testes_auditoria
+   dbt build
    ```
-4. Rode a suíte de testes:
-    ```bash
-    dbt test
-    ```
+(Nota: O comando `dbt build` executa o `dbt run` e o `dbt test` em sequência, garantindo que os modelos só sejam materializados se passarem nos testes do contrato).
 

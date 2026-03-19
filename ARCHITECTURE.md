@@ -10,7 +10,8 @@ O sistema opera sob as seguintes camadas:
 - **Client (Apresentação):** Aplicação web otimizada.
 - **Ingestion API (Node.js):** Backend Node.js responsável pelas novas auditorias, operando com ingestão *near-real-time*.
 - **Data Pipeline (ELT):** Automação em Python responsável pela ingestão em lote (batch) de dados legados.
-- **Data Warehouse:** Armazenamento analítico estruturado no Google BigQuery sob a Arquitetura Medalhão.
+- **Data Warehouse:** Armazenamento analítico (Google BigQuery) que atua como motor de processamento para o dbt sob a Arquitetura Medalhão.
+- **Transformação e Qualidade (dbt):** Ferramenta centralizada responsável por desempacotar o JSON bruto (Parsing), aplicar testes de contrato (ACID) e materializar as regras de negócio nas camadas Silver e Gold.
 - **Business Intelligence:** Camada de visualização (Looker Studio) operando sobre métricas binárias pré-calculadas.
 
 ---
@@ -52,17 +53,18 @@ graph TD
     A -->|Near-Real-Time / JSON| C
     B -->|Carga Batch| D
     
-    C -->|Idempotência / Merge| E
-    C -->|Unpivot / Merge| F
-    D -->|Carga Histórica| E
-    D -->|Carga Histórica| F
+    C -->|JSON Bruto (Ingestão Pura)| E
+    D -->|Carga Histórica| E
+    D -->|Carga Histórica| F
     
-    E -->|Tipagem e Deduplicação| G
-    F -->|Tipagem e Deduplicação| H
+    E -->|dbt: JSON Parsing & Tests| G
+    E -->|dbt: Unpivot Dinâmico| H
+    F -->|dbt: Tipagem & Limpeza| G
+    F -->|dbt: Tipagem & Limpeza| H
     
-    G -->|JOIN Cabeçalho| J
-    H -->|Pivot + Lógica Binária| J
-    I -->|Tradução Labels (LEFT JOIN)| J
+    G -->|dbt: JOIN Cabeçalho| J
+    H -->|dbt: Pivot + Lógica Binária| J
+    I -->|dbt: Tradução Labels| J
     
     J -->|Somas Simples / Alta Performance| K
 
@@ -82,7 +84,7 @@ graph TD
 ## 2. Componentes e Tecnologias
 
 ### 2.1. Ingestão Near-Real-Time (API Node.js)
-Responsável por captar os dados preenchidos ativamente pelos auditores, eliminando a dependência de uma base de dados transacional (OLTP). Gera **UUIDv4** na origem para garantir a integridade e permitir estratégias de deduplicação via `MERGE`.
+Responsável por captar os dados preenchidos ativamente pelos auditores. Opera sob o conceito de **Ingestão Pura**, gerando um **UUIDv4** na origem para garantir a unicidade e empacotando todo o payload em um campo JSON bruto na camada Bronze. Delega 100% da responsabilidade de transformação e schema para o dbt, garantindo a atomicidade da transação.
 
 ### 2.2. Ingestão em Lote (Data Engineering / ELT)
 Responsável por garantir a preservação histórica de dados legados. Utiliza **Python (Polars)** para manipulação de matrizes de dados em memória e orquestração via **GitHub Actions** em horários programados.
@@ -110,3 +112,6 @@ Responsável por garantir a preservação histórica de dados legados. Utiliza *
 * [ADR 0012: Adoção do dbt para Auditoria e Qualidade de Dados](./docs/adr/0012-adocao-dbt-qualidade.md)
 * [ADR 0013: IAM e Política de Privilégio Mínimo para Consumo de BI](./docs/adr/0013-iam-bi-least-privilege.md)
 * [ADR 0014: Implementação de Lógica Binária para Métricas de Conformidade](./docs/adr/0014-logica-binaria-conformidade.md)
+* [ADR 0015: Utilização do tipo de dado JSON para armazenamento bruto na Camada Bronze da API](./docs/adr/0015-utilizacao-tipo-json-camada-bronze-api.md)
+* [ADR 0016: Setup do dbt Cloud e Integração com BigQuery e GitHub](./docs/adr/0016-setup-dbt-cloud-bigquery.md)
+* [ADR 0017: Migração para Ingestão Pura (ELT) e Centralização de Transformações no dbt](./docs/adr/0017-migracao-ingestao-pura.md)
