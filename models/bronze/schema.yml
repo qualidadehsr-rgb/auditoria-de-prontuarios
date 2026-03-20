@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_bronze_respostas_web
+    description: "Tabela de capa/cabeçalho das auditorias vindas do sistema novo (Web)."
+    
+  - name: stg_bronze_detalhes_respostas_web
+    description: "Tabela de detalhes do sistema novo (Web). Traz o JSON aberto com uma linha por pergunta/resposta."
+    columns:
+      - name: numAtendimento
+        description: "Número identificador único do atendimento/paciente."
+      - name: pergunta
+        description: "Descrição da pergunta feita no formulário de auditoria."
+      - name: resposta
+        description: "Resposta preenchida pelo auditor."
+
+  - name: stg_bronze_legado_respostas
+    description: "Tabela de capa/cabeçalho das auditorias vindas do sistema antigo (Legado)."
+
+  - name: stg_bronze_detalhes_respostas_legado
+    description: "Tabela de detalhes do sistema antigo (Legado). Dados gerados via UNPIVOT para padronizar com a estrutura da Web."
+    columns:
+      - name: numAtendimento
+        description: "Número identificador único do atendimento/paciente."
+      - name: Timestamp
+        description: "Data e hora do registro."
+      - name: pergunta
+        description: "Nome da coluna original que virou a pergunta após o UNPIVOT."
+      - name: resposta
+        description: "Conteúdo respondido no sistema antigo."
