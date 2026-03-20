@@ -1,3 +1,4 @@
+{{config(materialized='table')}}
 with tabela_base as(
 SELECT id_submissao, conteudo_bruto
 FROM {{source('bronze','bronze_respostas_web')}}
