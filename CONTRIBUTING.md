@@ -21,7 +21,17 @@ Como este é um *monorepo* poliglota (Node.js, Python e SQL), você precisará c
 2. Crie um arquivo `.env` na raiz do projeto com base no arquivo `.env.example`.
 3. Solicite a chave de serviço (Service Account JSON) do Google Cloud ao administrador. **Mantenha este arquivo seguro e fora do rastreamento do Git.**
 
-### 2. Ambiente Web / Ingestão Near-real-time (Node.js)
+### 2. Regras para o Ambiente dbt (Data Build Tool)
+
+Neste projeto, utilizamos pacotes externos para acelerar o desenvolvimento de macros complexas (como o `dbt_utils` para o UNPIVOT). Para garantir que o ambiente local funcione perfeitamente, siga estas regras:
+
+1. **Instalação de Dependências:** Sempre que clonar o repositório ou puxar novas atualizações da `main`, rode o comando obrigatório no console do dbt:
+   `dbt deps`
+   Isso garante que todos os pacotes listados no `packages.yml` sejam baixados para a sua máquina (pasta `dbt_packages`).
+
+2. **Versionamento de Pacotes:** Nunca adicione um pacote no `packages.yml` sem especificar a versão (`version:`). O dbt Cloud é sensível a atualizações (especialmente nas versões 2.0+), e pacotes sem versão travada podem quebrar a compilação do projeto inteiro inesperadamente.
+
+### 3. Ambiente Web / Ingestão Near-real-time (Node.js)
 Se você for trabalhar no Front-end ou na API REST:
 1. Certifique-se de ter o Node.js (versão 18 ou superior) instalado.
 2. Instale as dependências: `npm install`
@@ -30,14 +40,14 @@ Se você for trabalhar no Front-end ou na API REST:
 > **Atenção:** Qualquer novo payload de auditoria deve gerar um identificador único (UUIDv4) na origem para garantir a rastreabilidade e permitir a deduplicação analítica.
 **Regra de Ouro da Ingestão Pura:** O Node.js atua exclusivamente como transportador. É terminantemente proibido adicionar lógica de fatiamento de payload, tipagem ou criação de regras de negócio nesta camada (backend). O formulário web deve ser salvo integralmente como um objeto JSON fechado (`conteudo_bruto`) na camada Bronze. Toda a transformação ocorrerá no dbt.
 
-### 3. Ambiente de Dados / ELT Batch e Metadados (Python)
+### 4. Ambiente de Dados / ELT Batch e Metadados (Python)
 Se você for trabalhar no pipeline de extração ou metadados:
 1. Certifique-se de ter o Python (versão 3.11 ou superior) instalado.
 2. Crie e ative um ambiente virtual (`venv`).
 3. Instale as dependências: `pip install -r requirements.txt`
 4. **Regra de Metadados (Docs-as-Code):** Se alterar a constante `ESTRUTURA_FORMULARIO` no Front-end, você **deve** rodar o extrator (`python scripts/extrai_dicionario_real.py`) para manter a Camada Gold e o Dicionário de Dados sincronizados.
 
-### 4. Ambiente de Data Warehouse / Transformações (SQL via dbt)
+### 5. Ambiente de Data Warehouse / Transformações (SQL via dbt)
 **Atenção: A criação ou atualização manual de tabelas via scripts soltos ou Node.js está estritamente proibida para as camadas Silver e Gold.**
 
 1. **Centralização no dbt:** Toda a responsabilidade de transformação, unpivot de JSON (`JSON_VALUE`), padronização e testes ACID pertence ao dbt. Não crie rotinas de banco de dados fora dele.
@@ -45,7 +55,7 @@ Se você for trabalhar no pipeline de extração ou metadados:
 3. **Idempotência:** Não é mais necessário escrever comandos `MERGE` complexos na mão. A idempotência é garantida nativamente pelo motor de materialização do dbt (`table`, `view` ou `incremental`).
 4. **Configuração de Materialização:** Sempre defina explicitamente o tipo de materialização no topo do arquivo SQL (ex: `materialized='table'`). Evite o uso de `SELECT *` em modelos de staging para prevenir erros de colunas duplicadas ou schemas corrompidos.
 
-### 5. Fluxo de Trabalho (Engenharia de Analytics com dbt)
+### 6. Fluxo de Trabalho (Engenharia de Analytics com dbt)
 
 Todo o desenvolvimento das camadas de transformação de dados (Silver e Gold) é realizado através do **dbt Cloud**.
 
