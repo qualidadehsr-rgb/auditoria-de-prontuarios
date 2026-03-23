@@ -1,7 +1,13 @@
-{{config(materialized='table')}}
+{{config(materialized='table',
+         partition_by={
+            "field": "data_submissao",
+            "data_type": "timestamp",
+            "granularity": "day"
+         }
+         )}}
 with respostas_web as(
     select id_submissao as id_auditoria,
-           data_hora,
+           data_hora as data_submissao,
            nome_empresa,
            nome_avaliador,
            data_avaliacao,
@@ -15,7 +21,7 @@ with respostas_web as(
 ),
 respostas_legado as(
     select {{dbt_utils.generate_surrogate_key(['numAtendimento', 'Timestamp'])}} as id_auditoria,
-           parse_timestamp('%d/%m/%Y %H:%M:%S', replace(Timestamp, ',','')) as data_hora,
+           parse_timestamp('%d/%m/%Y %H:%M:%S', replace(Timestamp, ',','')) as data_submissao,
            nomeEmpresa as nome_empresa,
            nomeAvaliador as nome_avaliador,
            dataAvaliacao as data_avaliacao,
