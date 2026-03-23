@@ -94,6 +94,13 @@ Responsável por garantir a preservação histórica de dados legados. Utiliza *
 * **Camada Gold:** Além de resolver o padrão EAV, esta camada implementa a **Lógica Binária de Agregação**. 
 * **Otimização de Performance:** Movemos a complexidade de cálculo (transformar "Conforme" em número) do Looker Studio para o BigQuery. Isso garante que o dashboard realize apenas operações de `SUM`, reduzindo o tempo de resposta e o custo de processamento.
 
+### 2.4. Transformação e Padronização (O "Efeito Espelho")
+A arquitetura resolve a disparidade estrutural entre o sistema novo (Web) e o antigo (Legado) logo na saída da camada Bronze utilizando o dbt. 
+Para isso, foi implementada a estratégia de **"Efeito Espelho"**:
+- **Origem Web (JSON):** O pacote bruto é desempacotado dinamicamente extraindo chaves e valores através de funções avançadas de array (`REGEXP_EXTRACT_ALL` e `UNNEST`).
+- **Origem Legada (Wide Table):** A tabela estática de mais de 600 colunas horizontais é verticalizada utilizando a operação de `UNPIVOT`.
+O resultado arquitetural é que ambas as fontes, por mais distintas que sejam na origem, convergem exatamente para a mesma estrutura vertical padronizada (ID do Atendimento, Pergunta, Resposta). Isso blinda a camada Silver e Gold de qualquer complexidade estrutural das origens.
+
 ---
 
 ## 3. Registos de Decisões Arquiteturais (ADRs)
@@ -115,3 +122,6 @@ Responsável por garantir a preservação histórica de dados legados. Utiliza *
 * [ADR 0015: Utilização do tipo de dado JSON para armazenamento bruto na Camada Bronze da API](./docs/adr/0015-utilizacao-tipo-json-camada-bronze-api.md)
 * [ADR 0016: Setup do dbt Cloud e Integração com BigQuery e GitHub](./docs/adr/0016-setup-dbt-cloud-bigquery.md)
 * [ADR 0017: Migração para Ingestão Pura (ELT) e Centralização de Transformações no dbt](./docs/adr/0017-migracao-ingestao-pura.md)
+* [ADR 0018: Limpeza de Metadados na Camada Staging utilizando Jinja](./docs/adr/0018-limpeza-metadados-staging-jinja.md)
+* [ADR 0019: UNPIVOT do Sistema Legado utilizando pacote dbt_utils](./docs/adr/0019-unpivot-sistema-legado-dbt-utils.md)
+* [ADR 0020: Extração Dinâmica de JSON (Unpivot) na Camada Staging (Web)](./docs/adr/0020-extracao-json-dinamico-web.md)
