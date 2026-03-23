@@ -1,0 +1,44 @@
+version: 2
+models:
+  - name: silver_respostas
+    description: Tabela unificada com dados legados e formulario web trazendo dados sobre identificação dos registros de auditoria
+    columns:
+      - name: id_auditoria
+        tests:
+          - unique
+          - not_null
+      - name: setor_avaliado
+        tests:
+          - not_null
+      - name: numero_atendimento
+        tests:
+          - not_null
+      - name: nome_empresa
+        tests:
+          - not_null
+      - name: nome_avaliador
+        tests:
+          - not_null
+      - name: data_avaliacao
+        tests:
+          - not_null
+      - name: tipo_prontuario
+        tests:
+          - not_null
+      - name: especialidade
+        tests:
+          - not_null
+      - name: tipo_avaliacao
+        tests:
+          - not_null
+  - name: silver_detalhes
+    description: Tabela unificada com dados legados e formulario web trazendo respostas de cada pergunta da auditoria realizada
+    columns:
+      - name: id_auditoria
+        tests:
+          - not_null
+          - relationships:
+              arguments: 
+                to: ref('silver_respostas')
+                field: id_auditoria
+          
