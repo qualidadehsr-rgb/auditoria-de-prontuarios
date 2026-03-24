@@ -10,6 +10,21 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.13.0] - 2026-03-24
+### Adicionado (Arquitetura & dbt)
+- **Transformação em Nuvem (dbt):** Implementação completa do pipeline de transformação utilizando o dbt (Data Build Tool) conectado ao BigQuery, substituindo transformações manuais por modelos SQL escaláveis.
+- **Unificação Híbrida de Dados:** Criação da tabela final `gold_auditorias_consolidadas`, unindo com sucesso as duas fontes de ingestão do hospital (Pipeline Legado do Google Sheets + API Web em Tempo Real) em uma única "Single Source of Truth".
+- **Geração de Chaves Inteligentes:** Implementação de *Surrogate Keys* (Chaves Substitutas) com hash MD5 para garantir unicidade perfeita entre os sistemas legados e web (documentado na ADR 0021).
+- **Contratos de Dados e Qualidade:** Criação dos arquivos `schema.yml` nas camadas Bronze, Silver e Gold com testes automatizados de integridade (not_null, unique) nativos do dbt.
+- **Documentação de Decisões Técnicas:** Inclusão das ADRs 0018 (Limpeza de metadados em Staging), 0019 (Unpivot de legado com dbt_utils), 0020 (Extração dinâmica de JSON) e 0021 (Surrogate Keys).
+
+### Alterado (Performance & BI)
+- **Otimização do Looker Studio:** O dashboard corporativo foi redirecionado para consumir exclusivamente a camada Gold materializada pelo dbt.
+- **Redução de Latência (FinOps):** A carga de processamento pesado (Pivots complexos e cálculos EAV) foi transferida da ferramenta de BI para o banco de dados (BigQuery) durante a madrugada. Resultado: redução drástica no tempo de carregamento das 24 páginas do relatório para o usuário final.
+
+### Segurança (Git)
+- **Reforço de Variáveis de Ambiente:** Confirmação de isolamento do arquivo `.env` via `.gitignore` para proteção das credenciais do BigQuery em máquinas locais.
+
 ## [1.12.0] - 2026-03-19
 ### Alterado
 - Fluxo de submissão de dados simplificado para Ingestão Pura.
