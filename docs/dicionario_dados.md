@@ -21,6 +21,18 @@
 
 ---
 
+## Camada de Staging (Modelos Internos dbt)
+*Estas tabelas são modelos intermediários materializados como views no dataset `dbt_qualidadehsr`. Elas servem para preparar os dados brutos antes da unificação na Camada Silver.*
+
+| Tabela | Função Técnica |
+| :--- | :--- |
+| **stg_bronze_respostas_web** | Realiza o *parsing* do campo JSON `conteudo_bruto`. Aqui as chaves do dicionário são transformadas em colunas tipadas. |
+| **stg_bronze_legado_respostas** | Aplica a primeira camada de limpeza nos dados do Sheets e renomeia cabeçalhos técnicos para o padrão do projeto. |
+| **stg_bronze_detalhes_respostas_web** | Expande (UNNEST) as respostas do formulário web para o formato vertical (EAV). |
+| **stg_bronze_detalhes_respostas_legado** | Executa o UNPIVOT das 600+ colunas da planilha antiga utilizando a macro `dbt_utils.unpivot`. |
+
+---
+
 ## Camada Silver & Padronização (Materializada pelo dbt)
 Todas as tabelas desta camada são construídas e testadas exclusivamente pelo dbt. Os dados são extraídos do JSON da camada Bronze (Web) via funções de parsing (`JSON_VALUE`) e unificados com o histórico da Bronze (Legado), aplicando tipagem forte e padronização de nomenclaturas.
 
@@ -29,7 +41,7 @@ Todas as tabelas desta camada são construídas e testadas exclusivamente pelo d
 
 | Coluna | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id_resposta | UUID | Chave primária (PK). Mapeada diretamente do `id_submissao` (Bronze Web) ou gerada via `surrogate key` pelo dbt para os dados do Legado. |
+| id_resposta | STRING (MD5) | **Chave Primária (PK)**. Gerada via *Surrogate Key* (`dbt_utils.generate_surrogate_key`) combinando dados de origem. Garante unicidade absoluta e evita colisão de IDs entre o sistema Web (UUID) e o Legado. Protegida por testes de contrato (`unique`, `not_null`). |
 | data_submissao | TIMESTAMP | **Campo de Partição**. Carimbo de data/hora de quando a auditoria foi registrada. |
 | nome_empresa | STRING | **Campo de Cluster**. Nome da unidade hospitalar onde a auditoria foi realizada. |
 | nome_avaliador | STRING | **Campo de Cluster**. Nome completo do profissional que realizou a auditoria. |
@@ -47,7 +59,7 @@ Todas as tabelas desta camada são construídas e testadas exclusivamente pelo d
 
 | Coluna | Tipo | Chave | Descrição |
 | :--- | :--- | :--- | :--- |
-| id_detalhe | STRING | PK | Identificador único da linha. Gerado pelo dbt (`hash surrogate key` combinando `id_resposta` + `nome_pergunta`) após o processo de unpivot do JSON e das colunas legadas. |
+| id_detalhe | STRING (MD5) | **PK**. Identificador único da linha. Gerado pelo dbt combinando `id_resposta` + `nome_pergunta` após o processo de unpivot. Protegida por testes `unique` e `not_null`. |
 | id_resposta | STRING | FK / Cluster | **Chave Estrangeira**. Liga este detalhe ao cabeçalho na tabela `silver_respostas`. |
 | nome_pergunta | STRING | Cluster | O nome técnico da pergunta (conforme o payload JSON ou cabeçalho legado). |
 | valor_resposta | STRING | - | O conteúdo da resposta (pode ser "Conforme", "Não Conforme", "N/A" ou o texto de uma observação). |
@@ -59,20 +71,27 @@ Todas as tabelas desta camada são construídas e testadas exclusivamente pelo d
 ### Tabela (View): `gold_auditorias_consolidadas`
 *Visão final unificada e otimizada para BI. Une cabeçalhos, respostas pivotadas e nomes amigáveis. Esta view implementa lógica de agregação binária para performance no Looker Studio.*
 
-| Coluna | Origem | Descrição |
+### Tabela (View): `gold_auditorias_consolidadas`
+*Visão final unificada e otimizada para BI. Une cabeçalhos, respostas pivotadas e nomes amigáveis. Esta view implementa lógica de agregação binária para performance no Looker Studio.*
+
+| Coluna | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id_resposta | `silver_respostas` | ID único da auditoria (chave de rastreabilidade). |
-| data_submissao | `silver_respostas` | Data/Hora em que o formulário foi enviado. |
-| nome_empresa | `silver_respostas` | Unidade Hospitalar. |
-| nome_avaliador | `silver_respostas` | Nome do auditor. |
-| setor_avaliado | `silver_respostas` | Setor do hospital auditado. |
-| tipo_avaliacao | `dim_perguntas` | Categoria do checklist (ex: Clínico, Cirúrgico). |
-| tema_formatado | `dim_perguntas` | Agrupamento das perguntas (ex: Identificação, Transporte, Alta). |
-| pergunta_formatada | `dim_perguntas` | A pergunta escrita de forma clara e legível para o relatório. |
-| resposta_conformidade | `silver_detalhes_respostas` | Resultado da avaliação: Conforme, Não Conforme ou N/A. |
-| **qtde_conforme** | **Cálculo (SQL)** | **Métrica FinOps**: Atribui 1 se a resposta for "Conforme" e 0 para qualquer outro valor. |
-| **qtde_valida** | **Cálculo (SQL)** | **Métrica FinOps**: Atribui 1 se a resposta for "Conforme" ou "Não Conforme". Atribui 0 para "N/A", servindo como denominador da taxa de conformidade. |
-| observacao_texto | `silver_detalhes_respostas` | Comentários e justificativas inseridos pelo auditor para aquela pergunta. |
+| **id_auditoria** | STRING | Chave única da auditoria (MD5). Garante a rastreabilidade exata do formulário submetido. |
+| **codigo_pergunta** | STRING | Código técnico raiz da pergunta avaliada (ex: `Q01_IDENTIFICACAO`). |
+| **data_submissao** | TIMESTAMP | Data e hora em que o formulário de auditoria foi enviado e processado. |
+| **nome_empresa** | STRING | Nome da unidade hospitalar onde a auditoria foi realizada. |
+| **nome_avaliador** | STRING | Nome completo do profissional que realizou a auditoria. |
+| **setor_avaliado** | STRING | Unidade ou setor interno do hospital auditado (ex: UTI, Pronto Socorro). |
+| **especialidade** | STRING | Especialidade médica relacionada ao prontuário auditado. |
+| **tipo_avaliacao** | STRING | Categoria macro da auditoria (ex: Clínico, Cirúrgico, Obstétrico). |
+| **numero_atendimento** | STRING | Identificador único do atendimento do paciente no sistema de prontuário eletrônico (MV/Tasy). |
+| **tipo_prontuario** | STRING | Define se o prontuário avaliado é Físico (papel) ou Eletrônico. |
+| **tema_formatado** | STRING | Agrupamento lógico/fase da auditoria (ex: Identificação, Transporte, Alta). |
+| **pergunta_formatada** | STRING | A pergunta escrita de forma clara e legível para exibição direta no dashboard. |
+| **resposta** | STRING | Resultado da avaliação daquela pergunta específica: `Conforme`, `Não Conforme` ou `N/A`. |
+| **observacao** | STRING | Comentários e justificativas. **Nota (LGPD):** Passa por filtro de mascaramento. Sequências como CPFs/Telefones aparecem como `[CENSURADO]`. |
+| **qtde_conforme** | INTEGER | **Métrica FinOps (dbt):** Atribui `1` se a resposta for "Conforme" e `0` para qualquer outro valor. |
+| **qtde_validos** | INTEGER | **Métrica FinOps (dbt):** Atribui `1` se a resposta for "Conforme" ou "Não Conforme". Atribui `0` para "N/A" (usado como denominador de taxas). |
 
 ---
 

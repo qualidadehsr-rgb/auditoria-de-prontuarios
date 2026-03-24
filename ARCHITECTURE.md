@@ -31,18 +31,19 @@ graph TD
     end
 
     subgraph "3. Camada Bronze (Raw Data)"
-        E[(respostas_brutas)]
-        F[(detalhes_respostas_brutas)]
+        E[(respostas_web_brutas)]
+        F[(respostas_legado_brutas)]
     end
 
     subgraph "4. Camada Silver (Curated / EAV)"
         G[(silver_respostas)]
         H[(silver_detalhes_respostas)]
+        SK((Gerador de <br/> Surrogate Keys MD5))
     end
 
     subgraph "5. Camada Gold (Semântica / FinOps)"
         I[(dim_perguntas - Dicionário CSV)]
-        J{{gold_auditorias_consolidadas - View <br/> Métricas Binárias 0/1}}
+        J{{gold_auditorias_consolidadas - View <br/> Pivot + Lógica Binária}}
     end
 
     subgraph "6. Consumo (BI)"
@@ -51,20 +52,20 @@ graph TD
 
     %% Relacionamentos e Fluxos
     A -->|Near-Real-Time / JSON| C
-    B -->|Carga Batch| D
+    B -->|GitHub Actions (Cron)| D
     
     C -->|JSON Bruto (Ingestão Pura)| E
-    D -->|Carga Histórica| E
-    D -->|Carga Histórica| F
+    D -->|Carga Histórica / Batch| F
     
-    E -->|dbt: JSON Parsing & Tests| G
-    E -->|dbt: Unpivot Dinâmico| H
-    F -->|dbt: Tipagem & Limpeza| G
-    F -->|dbt: Tipagem & Limpeza| H
+    E -->|dbt: JSON Parsing & Tests| SK
+    F -->|dbt: Unpivot (dbt_utils)| SK
+    
+    SK -->|Unificação via Chave MD5| G
+    SK -->|Unificação via Chave MD5| H
     
     G -->|dbt: JOIN Cabeçalho| J
-    H -->|dbt: Pivot + Lógica Binária| J
-    I -->|dbt: Tradução Labels| J
+    H -->|dbt: Pivot + Lógica Binária| J
+    I -->|dbt: Tradução Labels| J
     
     J -->|Somas Simples / Alta Performance| K
 
@@ -73,11 +74,13 @@ graph TD
     classDef silver fill:#C0C0C0,stroke:#333,stroke-width:2px,color:#000;
     classDef gold fill:#FFD700,stroke:#333,stroke-width:2px,color:#000;
     classDef view fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef sk fill:#ff9999,stroke:#333,stroke-width:2px,color:#000;
     
     class E,F bronze;
     class G,H silver;
     class I gold;
     class J view;
+    class SK sk;
 ```
 ---
 
@@ -97,9 +100,10 @@ Responsável por garantir a preservação histórica de dados legados. Utiliza *
 ### 2.4. Transformação e Padronização (O "Efeito Espelho")
 A arquitetura resolve a disparidade estrutural entre o sistema novo (Web) e o antigo (Legado) logo na saída da camada Bronze utilizando o dbt. 
 Para isso, foi implementada a estratégia de **"Efeito Espelho"**:
-- **Origem Web (JSON):** O pacote bruto é desempacotado dinamicamente extraindo chaves e valores através de funções avançadas de array (`REGEXP_EXTRACT_ALL` e `UNNEST`).
-- **Origem Legada (Wide Table):** A tabela estática de mais de 600 colunas horizontais é verticalizada utilizando a operação de `UNPIVOT`.
+* **Origem Web (JSON):** O pacote bruto é desempacotado dinamicamente extraindo chaves e valores através de funções avançadas de array (`REGEXP_EXTRACT_ALL` e `UNNEST`).
+* **Origem Legada (Wide Table):** A tabela estática de mais de 600 colunas horizontais é verticalizada utilizando a operação de `UNPIVOT`.
 O resultado arquitetural é que ambas as fontes, por mais distintas que sejam na origem, convergem exatamente para a mesma estrutura vertical padronizada (ID do Atendimento, Pergunta, Resposta). Isso blinda a camada Silver e Gold de qualquer complexidade estrutural das origens.
+* **Unificação (Surrogate Keys):** Como o sistema Web gera UUIDs nativos e o sistema Legado possui apenas datas e e-mails, o dbt gera uma Chave Substituta (Surrogate Key) aplicando um hash MD5 (`dbt_utils.generate_surrogate_key`) sobre os campos da origem. Isso garante uma chave primária universal, permitindo que a camada Silver faça o `UNION ALL` das duas fontes sem risco de colisão de IDs, documentado na ADR 0021.
 
 ---
 
@@ -125,3 +129,6 @@ O resultado arquitetural é que ambas as fontes, por mais distintas que sejam na
 * [ADR 0018: Limpeza de Metadados na Camada Staging utilizando Jinja](./docs/adr/0018-limpeza-metadados-staging-jinja.md)
 * [ADR 0019: UNPIVOT do Sistema Legado utilizando pacote dbt_utils](./docs/adr/0019-unpivot-sistema-legado-dbt-utils.md)
 * [ADR 0020: Extração Dinâmica de JSON (Unpivot) na Camada Staging (Web)](./docs/adr/0020-extracao-json-dinamico-web.md)
+* [ADR 0021: Implementação de Surrogate Keys (MD5) para Unificação de Auditorias](./docs/adr/0021-implementacao-surrogate_key-unificacao-auditorias.md)
+* [ADR 0022: Orquestração do Pipeline Legado via GitHub Actions](./docs/adr/0022-orquestracao-legado-github-actions.md)
+* [ADR 0023: Desacoplamento de Transformação do BI e Consumo Exclusivo da Camada Gold](./docs/adr/0023-desacoplamento-transformacao-looker-studio.md)
