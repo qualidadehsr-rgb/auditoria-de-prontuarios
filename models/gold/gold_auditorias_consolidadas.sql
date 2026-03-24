@@ -54,7 +54,9 @@ fatos_com_nome as (
     on d.codigo_base = c.codigo_pergunta
 ),
 consolidado_final as(
-    select r.data_submissao,
+    select f.id_auditoria,
+           f.codigo_pergunta,
+           r.data_submissao,
            r.nome_empresa,
            r.nome_avaliador,
            r.setor_avaliado,
