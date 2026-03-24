@@ -7,3 +7,5 @@ sources:
     tables:
       - name: bronze_respostas_web
       - name: bronze_legado_respostas
+      - name: dim_perguntas
+        description: Dicionário oficial de perguntas para formatação no Looker Studio
