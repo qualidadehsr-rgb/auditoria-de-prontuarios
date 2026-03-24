@@ -1,3 +1,14 @@
+{{config(materialized='table',
+         partition_by={
+            "field": "data_submissao",
+            "data_type": "timestamp",
+            "granularity": "day"
+         },
+         cluster_by=["nome_empresa",
+                     "tipo_avaliacao",
+                     "setor_avaliado",
+                     "especialidade"]
+         )}}
 with resposta as(
     select * from {{ref('silver_respostas')}}
 ),
@@ -43,7 +54,7 @@ fatos_com_nome as (
     on d.codigo_base = c.codigo_pergunta
 ),
 consolidado_final as(
-    select r.data_hora,
+    select r.data_submissao,
            r.nome_empresa,
            r.nome_avaliador,
            r.setor_avaliado,

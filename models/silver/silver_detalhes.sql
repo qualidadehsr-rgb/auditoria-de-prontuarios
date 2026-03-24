@@ -1,4 +1,7 @@
-{{config(materialized='table')}}
+{{config(materialized='table',
+         cluster_by = ["id_auditoria",
+                       "pergunta",
+                       "resposta"])}}
 with detalhes_web as(
     select id_submissao as id_auditoria,
            pergunta,
