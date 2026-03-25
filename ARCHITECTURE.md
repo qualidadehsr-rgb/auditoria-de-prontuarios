@@ -52,13 +52,13 @@ graph TD
 
     %% Relacionamentos e Fluxos
     A -->|Near-Real-Time / JSON| C
-    B -->|GitHub Actions (Cron)| D
+    B -->|GitHub Actions Cron| D
     
-    C -->|JSON Bruto (Ingestão Pura)| E
+    C -->|JSON Bruto Ingestão Pura| E
     D -->|Carga Histórica / Batch| F
     
     E -->|dbt: JSON Parsing & Tests| SK
-    F -->|dbt: Unpivot (dbt_utils)| SK
+    F -->|dbt: Unpivot dbt_utils| SK
     
     SK -->|Unificação via Chave MD5| G
     SK -->|Unificação via Chave MD5| H
@@ -73,7 +73,7 @@ graph TD
     classDef bronze fill:#CD7F32,stroke:#333,stroke-width:2px,color:#fff;
     classDef silver fill:#C0C0C0,stroke:#333,stroke-width:2px,color:#000;
     classDef gold fill:#FFD700,stroke:#333,stroke-width:2px,color:#000;
-    classDef view fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef view fill:#E8D5F5,stroke:#333,stroke-width:2px,color:#000;
     classDef sk fill:#ff9999,stroke:#333,stroke-width:2px,color:#000;
     
     class E,F bronze;
