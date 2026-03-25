@@ -7,7 +7,7 @@
 Um ecossistema de dados completo (App Web + Pipeline Híbrido + dbt + BI) desenvolvido para automatizar a auditoria clínica de um grupo hospitalar com 9 unidades. O projeto soluciona o desafio de consolidar dados qualitativos complexos em inteligência estratégica em tempo real.
 
 ## O Impacto em Números
-* **Performance de BI:** Redução de **40%** no tempo de carregamento do dashboard (de **15,8s** via Google Sheets para **9,5s** via BigQuery + dbt). *Nota: Otimização contínua com foco em reduzir a latência para < 5s através da revisão de páginas.*
+* **Performance de BI:** Redução de **76%** no tempo de carregamento do dashboard (de **11,8s** para **2,8s**) e de **24 páginas** para **5 páginas**, resultado da migração de cálculos para o BigQuery via dbt e reestruturação do relatório.
 * **Escalabilidade:** Ingestão e processamento de **104.820+ linhas** históricas unificadas a dados em tempo real.
 * **Confiabilidade:** 100% de automação na consolidação de dados, eliminando erros manuais e garantindo *Single Source of Truth* (SSOT).
 
@@ -19,6 +19,11 @@ O dashboard entrega a **Taxa de Conformidade** (qtde_conforme / qtde_validos) co
 * Por **especialidade médica**
 * Por **avaliador**
 * Por **período** (filtro temporal)
+
+## Usuários Finais
+* **Comissão de Prontuários** — responsável pela governança e padrão de qualidade dos registros clínicos
+* **Coordenadores de Qualidade** — acompanham indicadores de conformidade e definem planos de ação
+* **Gestores das unidades** — monitoram o desempenho da sua unidade em relação às demais
 
 ## O Desafio Técnico: Da Planilha à Modern Data Stack
 O projeto evoluiu de uma gestão manual e descentralizada para uma arquitetura analítica:
@@ -123,6 +128,7 @@ Para detalhes técnicos profundos, consulte:
 * [**Dicionário de Dados**](./dicionario_dados.md): Definição de tabelas, tipos e métricas.
 * [**Guia de Contribuição**](./CONTRIBUTING.md): Como configurar o ambiente e padrões de código.
 * [**ADRs**](./docs/adr/): O registro de todas as decisões arquiteturais do projeto.
+* [**Fontes de Dados**](./docs/fontes_de_dados.md): Mapeamento completo das origens, volumetria e problemas conhecidos.
 
 ---
 ### Desenvolvido por:
