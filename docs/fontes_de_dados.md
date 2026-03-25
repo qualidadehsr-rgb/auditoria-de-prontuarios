@@ -34,3 +34,29 @@
 | Sistema Legado | 2.244 | ~104.800 | Volume estável — sistema antigo não recebe novos dados |
 | Sistema Web | 1 | ~47 | Sistema novo em fase inicial de adoção pelas unidades |
 | Total | 2.245 | ~104.850 | Tendência de crescimento conforme unidades migram para o sistema Web |
+
+
+## SLAs de Atualização
+
+| Fonte | Frequência de Ingestão | Warn (atraso tolerável) | Error (atraso crítico) | Justificativa |
+|-------|----------------------|------------------------|----------------------|---------------|
+| Sistema Legado (Sheets) | Batch 3x/dia (10h, 16h, 22h UTC) | 12 horas | 24 horas | Dados históricos, não há urgência — mas mais de 1 dia sem carga indica falha no pipeline |
+| Sistema Web (API) | Near-real-time | 1 hora | 3 horas | Auditorias novas precisam aparecer no dashboard no mesmo turno de trabalho |
+
+
+## Consumo de Dados (BI)
+
+**Plataforma:** Looker Studio (dashboard autoserviço, acesso gratuito para todos os usuários)
+
+**Usuários:** Comissão de Prontuários, Coordenadores de Qualidade, Gestores das 5 unidades
+
+**Dashboard:** 5 páginas (consolidado após reestruturação — versão anterior tinha 24 páginas)
+
+**Filtros obrigatórios disponíveis:**
+- Por empresa (unidade hospitalar)
+- Por setor (UTI, Pronto Socorro, etc.)
+- Por tipo de avaliação (Clínico, Cirúrgico, Obstétrico, etc.)
+- Por especialidade médica
+- Por período (intervalo de datas)
+
+**Regra de performance (FinOps):** O Looker Studio realiza apenas operações de SUM sobre os campos qtde_conforme e qtde_validos. Toda lógica de negócio (classificação binária Conforme/Não conforme) está pré-calculada na camada Gold pelo dbt. É proibido criar campos calculados complexos ou filtros REGEX diretamente no Looker Studio.

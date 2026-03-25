@@ -9,3 +9,10 @@
 * **Consequências (Trade-offs):**
   * *Positivo:* Capacidade de escalabilidade infinita, fim dos bloqueios de concorrência e integração nativa otimizada com o Looker Studio.
   * *Negativo:* Curva de aprendizado maior para novos desenvolvedores, introdução do conceito de "Consistência Eventual" (Streaming Buffer), e necessidade de gerenciamento rigoroso de credenciais (GCP IAM).
+
+* **Critérios adicionais da escolha:**
+  * Free tier generoso (10GB armazenamento + 1TB consulta/mês), viabilizando o projeto sem custo inicial
+  * Integração nativa com Looker Studio sem configuração intermediária
+  * Arquitetura serverless eliminando gestão de infraestrutura
+  * Suporte nativo a JSON, partitioning e clustering para otimização de performance
+  * Alta demanda em vagas de analytics engineer no mercado brasileiro

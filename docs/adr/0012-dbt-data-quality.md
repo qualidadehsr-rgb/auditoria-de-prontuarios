@@ -27,3 +27,10 @@ Decidimos implementar o **dbt (Data Build Tool)**, especificamente os pacotes `d
 ### Negativas/Atenção:
 * Adiciona uma nova ferramenta e um ambiente virtual Python (`venv`) à stack do projeto, aumentando levemente a curva de aprendizado para novos desenvolvedores.
 * Necessidade de rodar comandos adicionais (`dbt test`) durante o fluxo de desenvolvimento contínuo (CI/CD).
+
+* **Critérios adicionais da escolha:**
+  * Padrão de mercado para analytics engineering no modelo ELT
+  * Testes de qualidade nativos (unique, not_null, relationships, accepted_values) sem código extra
+  * Materialização automática (table, view, incremental) sem necessidade de escrever DDL manualmente
+  * Cada modelo é um arquivo .sql versionado no Git, garantindo rastreabilidade total
+  * dbt Cloud oferece free tier para 1 desenvolvedor, viabilizando uso sem custo
