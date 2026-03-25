@@ -20,6 +20,11 @@ O dashboard entrega a **Taxa de Conformidade** (qtde_conforme / qtde_validos) co
 * Por **avaliador**
 * Por **período** (filtro temporal)
 
+## Usuários Finais
+* **Comissão de Prontuários** — responsável pela governança e padrão de qualidade dos registros clínicos
+* **Coordenadores de Qualidade** — acompanham indicadores de conformidade e definem planos de ação
+* **Gestores das unidades** — monitoram o desempenho da sua unidade em relação às demais
+
 ## O Desafio Técnico: Da Planilha à Modern Data Stack
 O projeto evoluiu de uma gestão manual e descentralizada para uma arquitetura analítica:
 1.  **Fase de Caos:** Planilhas isoladas e semanas para consolidar um relatório mensal.
