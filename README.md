@@ -128,6 +128,7 @@ Para detalhes técnicos profundos, consulte:
 * [**Dicionário de Dados**](./dicionario_dados.md): Definição de tabelas, tipos e métricas.
 * [**Guia de Contribuição**](./CONTRIBUTING.md): Como configurar o ambiente e padrões de código.
 * [**ADRs**](./docs/adr/): O registro de todas as decisões arquiteturais do projeto.
+* [**Fontes de Dados**](./docs/fontes_de_dados.md): Mapeamento completo das origens, volumetria e problemas conhecidos.
 
 ---
 ### Desenvolvido por:

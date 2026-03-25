@@ -105,6 +105,7 @@ Para isso, foi implementada a estratégia de **"Efeito Espelho"**:
 O resultado arquitetural é que ambas as fontes, por mais distintas que sejam na origem, convergem exatamente para a mesma estrutura vertical padronizada (ID do Atendimento, Pergunta, Resposta). Isso blinda a camada Silver e Gold de qualquer complexidade estrutural das origens.
 * **Unificação (Surrogate Keys):** Como o sistema Web gera UUIDs nativos e o sistema Legado possui apenas datas e e-mails, o dbt gera uma Chave Substituta (Surrogate Key) aplicando um hash MD5 (`dbt_utils.generate_surrogate_key`) sobre os campos da origem. Isso garante uma chave primária universal, permitindo que a camada Silver faça o `UNION ALL` das duas fontes sem risco de colisão de IDs, documentado na ADR 0021.
 
+> Para o mapeamento detalhado de todas as fontes (formato, frequência, volumetria e problemas conhecidos), consulte [Fontes de Dados](./docs/fontes_de_dados.md).
 ---
 
 ## 3. Registos de Decisões Arquiteturais (ADRs)
