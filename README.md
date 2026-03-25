@@ -11,6 +11,15 @@ Um ecossistema de dados completo (App Web + Pipeline Híbrido + dbt + BI) desenv
 * **Escalabilidade:** Ingestão e processamento de **104.820+ linhas** históricas unificadas a dados em tempo real.
 * **Confiabilidade:** 100% de automação na consolidação de dados, eliminando erros manuais e garantindo *Single Source of Truth* (SSOT).
 
+## Métricas de Negócio
+O dashboard entrega a **Taxa de Conformidade** (qtde_conforme / qtde_validos) com os seguintes cortes analíticos:
+* Por **unidade hospitalar**
+* Por **setor** (UTI, Pronto Socorro, Centro Cirúrgico, etc.)
+* Por **tipo de prontuário** (Clínico, Cirúrgico, Obstétrico, etc.)
+* Por **especialidade médica**
+* Por **avaliador**
+* Por **período** (filtro temporal)
+
 ## O Desafio Técnico: Da Planilha à Modern Data Stack
 O projeto evoluiu de uma gestão manual e descentralizada para uma arquitetura analítica:
 1.  **Fase de Caos:** Planilhas isoladas e semanas para consolidar um relatório mensal.
