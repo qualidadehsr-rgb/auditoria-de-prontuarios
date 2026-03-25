@@ -1,5 +1,16 @@
 # Dicionário de Dados
 
+## Granularidade das Tabelas
+
+| Tabela | Uma linha representa |
+|--------|---------------------|
+| bronze_respostas_web | Uma submissão de auditoria com payload JSON bruto |
+| bronze_legado_respostas | Uma submissão de auditoria com 600+ colunas horizontais |
+| silver_respostas | Uma auditoria realizada (um prontuário avaliado em uma data) |
+| silver_detalhes | Uma resposta a uma pergunta dentro de uma auditoria |
+| gold_auditorias_consolidadas | Uma resposta com todos os metadados da auditoria e a pergunta formatada |
+| dim_perguntas | Uma pergunta do formulário com seu código e label formatado |
+
 ## Camada Bronze & Origem de Dados
 
 ### Tabela: `bronze_legado_respostas`
