@@ -34,3 +34,11 @@
 | Sistema Legado | 2.244 | ~104.800 | Volume estável — sistema antigo não recebe novos dados |
 | Sistema Web | 1 | ~47 | Sistema novo em fase inicial de adoção pelas unidades |
 | Total | 2.245 | ~104.850 | Tendência de crescimento conforme unidades migram para o sistema Web |
+
+
+## SLAs de Atualização
+
+| Fonte | Frequência de Ingestão | Warn (atraso tolerável) | Error (atraso crítico) | Justificativa |
+|-------|----------------------|------------------------|----------------------|---------------|
+| Sistema Legado (Sheets) | Batch 3x/dia (10h, 16h, 22h UTC) | 12 horas | 24 horas | Dados históricos, não há urgência — mas mais de 1 dia sem carga indica falha no pipeline |
+| Sistema Web (API) | Near-real-time | 1 hora | 3 horas | Auditorias novas precisam aparecer no dashboard no mesmo turno de trabalho |
