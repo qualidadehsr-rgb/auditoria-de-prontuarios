@@ -25,3 +25,12 @@
 
 ### Tabela de Configurações
 - Alimentação manual — risco de dados desatualizados se um setor ou especialidade nova for criado e ninguém atualizar a tabela
+
+
+## Volumetria (atualizado em: março/2026)
+
+| Fonte | Auditorias (Bronze) | Linhas após UNPIVOT (Silver) | Observação |
+|-------|--------------------|-----------------------------|------------|
+| Sistema Legado | 2.244 | ~104.800 | Volume estável — sistema antigo não recebe novos dados |
+| Sistema Web | 1 | ~47 | Sistema novo em fase inicial de adoção pelas unidades |
+| Total | 2.245 | ~104.850 | Tendência de crescimento conforme unidades migram para o sistema Web |
