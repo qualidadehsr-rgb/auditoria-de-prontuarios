@@ -11,3 +11,10 @@ Optei por utilizar o **GitHub Actions** para orquestrar o pipeline de dados lega
 ## Consequências
 * **Positivas:** Custo zero de infraestrutura (aproveitando os minutos gratuitos do GitHub). Não há necessidade de manter servidores ligados 24/7. Automação completa do fluxo híbrido de dados.
 * **Negativas:** Limite de tempo de execução do GitHub Actions (embora os scripts atuais rodem em poucos segundos, grandes volumes no futuro poderiam exigir paginação avançada).
+
+* **Critérios adicionais da escolha:**
+  * Python é a linguagem padrão para engenharia de dados, facilitando contratação e manutenção
+  * Polars oferece performance superior ao Pandas para manipulação de dados em memória
+  * GitHub Actions é gratuito para repositórios públicos (2000 min/mês para privados), eliminando custos de orquestração
+  * Dispensa servidor dedicado (ex: VM com Airflow), reduzindo complexidade operacional e custo de infraestrutura
+  * Projeto não possui DAGs complexas que justifiquem Airflow — GitHub Actions resolve cron simples com zero infraestrutura adicional
