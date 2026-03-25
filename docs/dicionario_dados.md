@@ -11,6 +11,18 @@
 | gold_auditorias_consolidadas | Uma resposta com todos os metadados da auditoria e a pergunta formatada |
 | dim_perguntas | Uma pergunta do formulário com seu código e label formatado |
 
+## Relacionamento entre Tabelas
+
+    silver_respostas (1) ──── id_auditoria ────> (N) silver_detalhes
+                                                        │
+                                                  codigo_pergunta
+                                                        │
+    dim_perguntas (1) ──── codigo_base ────────> (N) gold_auditorias_consolidadas
+
+### Chaves de Ligação
+- **id_auditoria**: conecta silver_respostas com silver_detalhes. No sistema Web é o UUID (id_submissao). No sistema Legado é uma Surrogate Key MD5 gerada sobre (numAtendimento + Timestamp).
+- **codigo_pergunta / codigo_base**: conecta silver_detalhes com dim_perguntas. O código segue o padrão TipoAvaliacao_Tema_Pergunta (ex: Clinico_HDA_QuadroClinico).
+
 ## Camada Bronze & Origem de Dados
 
 ### Tabela: `bronze_legado_respostas`
