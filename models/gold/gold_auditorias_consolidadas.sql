@@ -67,7 +67,7 @@ consolidado_final as(
            f.tema_formatado,
            f.pergunta_formatada,
            f.resposta,
-           f.observacao,
+           COALESCE(f.observacao, 'Sem observações') as observacao,
            case when f.resposta = 'Conforme' then 1 else 0 end as qtde_conforme,
            case when f.resposta in ('Conforme', 'Não conforme') then 1 else 0 end as qtde_validos
     from fatos_com_nome as f
