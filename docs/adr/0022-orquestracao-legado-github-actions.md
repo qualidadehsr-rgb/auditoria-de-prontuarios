@@ -18,3 +18,4 @@ Optei por utilizar o **GitHub Actions** para orquestrar o pipeline de dados lega
   * GitHub Actions é gratuito para repositórios públicos (2000 min/mês para privados), eliminando custos de orquestração
   * Dispensa servidor dedicado (ex: VM com Airflow), reduzindo complexidade operacional e custo de infraestrutura
   * Projeto não possui DAGs complexas que justifiquem Airflow — GitHub Actions resolve cron simples com zero infraestrutura adicional
+  * Se o projeto evoluir para DAGs complexas com dependências entre pipelines, a migração natural é para Airflow ou Cloud Composer, já documentada como caminho de evolução
