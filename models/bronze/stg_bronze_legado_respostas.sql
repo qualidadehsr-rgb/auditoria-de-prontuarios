@@ -1,4 +1,3 @@
-{{config(materialized='table')}}
 {%set colunas = adapter.get_columns_in_relation(source('bronze', 'bronze_legado_respostas'))%}
 with source_data as(
     select {% for col in colunas%}
