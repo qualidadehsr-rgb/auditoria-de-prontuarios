@@ -1,44 +1,59 @@
 version: 2
 models:
   - name: silver_respostas
-    description: Tabela unificada com dados legados e formulario web trazendo dados sobre identificação dos registros de auditoria
+    description: "Tabela unificada com dados legados e formulário web trazendo dados sobre identificação dos registros de auditoria."
     columns:
       - name: id_auditoria
+        description: "Chave primária. UUID no sistema Web ou Surrogate Key MD5 no sistema Legado."
         tests:
           - unique
           - not_null
       - name: setor_avaliado
+        description: "Setor do hospital onde a auditoria foi realizada (ex: UTI, Pronto Socorro)."
         tests:
           - not_null
       - name: numero_atendimento
+        description: "Identificador do atendimento do paciente no sistema hospitalar."
         tests:
           - not_null
       - name: nome_empresa
+        description: "Nome da unidade hospitalar do grupo (9 unidades)."
         tests:
           - not_null
       - name: nome_avaliador
+        description: "Nome do profissional que realizou a auditoria."
         tests:
           - not_null
       - name: data_avaliacao
+        description: "Data em que a auditoria do prontuário foi realizada."
         tests:
           - not_null
       - name: tipo_prontuario
+        description: "Tipo do prontuário avaliado (Físico ou Eletrônico)."
         tests:
           - not_null
       - name: especialidade
+        description: "Especialidade médica relacionada ao prontuário auditado."
         tests:
           - not_null
       - name: tipo_avaliacao
+        description: "Categoria da auditoria (Clínico, Cirúrgico, Obstétrico, etc.)."
         tests:
           - not_null
   - name: silver_detalhes
-    description: Tabela unificada com dados legados e formulario web trazendo respostas de cada pergunta da auditoria realizada
+    description: "Tabela unificada com dados legados e formulário web trazendo respostas de cada pergunta da auditoria realizada."
     columns:
       - name: id_auditoria
+        description: "Chave estrangeira referenciando silver_respostas. Identifica a qual auditoria esta resposta pertence."
         tests:
           - not_null
           - relationships:
-              arguments: 
+              arguments:
                 to: ref('silver_respostas')
                 field: id_auditoria
-          
+      - name: pergunta
+        description: "Código da pergunta do formulário (ex: Clinico_HDA_QuadroClinico_Resp)."
+      - name: resposta
+        description: "Valor respondido pelo auditor (Conforme, Não conforme, N/A ou texto livre para observações)."
+      - name: origem_sistema
+        description: "Indica de qual sistema o registro veio (web ou legado)."
