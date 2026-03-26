@@ -9,10 +9,11 @@ sources:
         description: "Dados brutos do sistema Web. Cada linha é uma submissão de auditoria com UUID e payload JSON completo."
         config:
           loaded_at_field: data_hora
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 3, period: hour}
       - name: bronze_legado_respostas
         description: "Espelho da planilha Google Sheets do sistema antigo. Mais de 600 colunas horizontais representando todas as perguntas do formulário."
-        config:
-          loaded_at_field: Timestamp
       - name: dim_perguntas
         description: "Dicionário oficial de perguntas. Mapeia o código interno (ex: Clinico_Id_NomeCompleto) para o label formatado exibido no Looker Studio."
       - name: configuracoes
