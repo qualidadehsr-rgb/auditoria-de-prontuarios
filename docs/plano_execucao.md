@@ -1,5 +1,7 @@
 ## Estimativa de Tempo por Entrega
 
+**MVP (Entrega Mínima Viável):** Entrega 1 — Pipeline Legado. Com apenas a extração do Google Sheets e uma visualização básica no Looker Studio, os stakeholders já conseguiam ver dados históricos consolidados das 5 unidades sem esperar semanas de consolidação manual.
+
 | Entrega | Escopo | Status | Tempo Estimado | Tempo Real |
 |---------|--------|--------|---------------|------------|
 | 1 - Pipeline Legado | Extração Sheets + BigQuery + GitHub Actions + BI básico | Concluído | 2 semanas | ~2 semanas (fev-mar/2026) |
