@@ -41,7 +41,7 @@
 | Fonte | Frequência de Ingestão | Warn (atraso tolerável) | Error (atraso crítico) | Justificativa |
 |-------|----------------------|------------------------|----------------------|---------------|
 | Sistema Legado (Sheets) | Batch 3x/dia (10h, 16h, 22h UTC) | 12 horas | 24 horas | Dados históricos, não há urgência — mas mais de 1 dia sem carga indica falha no pipeline |
-| Sistema Web (API) | Near-real-time | 1 hora | 3 horas | Auditorias novas precisam aparecer no dashboard no mesmo turno de trabalho |
+| Sistema Web (API) | Near-real-time | 20 dias | 35 dias | Ciclo de auditoria é mensal: atendimentos chegam entre os dias 10-15, auditorias são realizadas nos dias seguintes |
 
 
 ## Consumo de Dados (BI)
