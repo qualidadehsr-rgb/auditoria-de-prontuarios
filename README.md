@@ -129,6 +129,7 @@ Para detalhes técnicos profundos, consulte:
 * [**Guia de Contribuição**](./CONTRIBUTING.md): Como configurar o ambiente e padrões de código.
 * [**ADRs**](./docs/adr/): O registro de todas as decisões arquiteturais do projeto.
 * [**Fontes de Dados**](./docs/fontes_de_dados.md): Mapeamento completo das origens, volumetria e problemas conhecidos.
+* [**Plano de Execução**](./docs/plano_execucao.md): Entregas incrementais, estimativas de tempo e MVP.
 
 ---
 ### Desenvolvido por:

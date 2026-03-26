@@ -133,3 +133,4 @@ O resultado arquitetural é que ambas as fontes, por mais distintas que sejam na
 * [ADR 0021: Implementação de Surrogate Keys (MD5) para Unificação de Auditorias](./docs/adr/0021-implementacao-surrogate_key-unificacao-auditorias.md)
 * [ADR 0022: Orquestração do Pipeline Legado via GitHub Actions](./docs/adr/0022-orquestracao-legado-github-actions.md)
 * [ADR 0023: Desacoplamento de Transformação do BI e Consumo Exclusivo da Camada Gold](./docs/adr/0023-desacoplamento-transformacao-looker-studio.md)
+* [ADR 0024: Escolha do Node.js + Express para Ingestão Web](./docs/adr/0024-escolha-nodejs-ingestao-web.md)
