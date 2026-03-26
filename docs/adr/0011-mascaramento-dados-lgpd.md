@@ -26,3 +26,5 @@ Decidi implementar uma **abordagem híbrida de barreira dupla (Privacy by Design
 
 ### Negativas/Atenção:
 * O mascaramento via Regex (`[0-9]{4,}`) protege apenas documentos numéricos. Se o auditor ignorar o aviso visual e digitar um nome próprio em texto (ex: "O paciente João..."), a view SQL não conseguirá mascarar o dado, pois não há análise de contexto semântico.
+
+* **Nota (março/2026):** Durante a migração das views manuais para o dbt, o mascaramento foi temporariamente perdido. Restaurado no modelo gold_auditorias_consolidadas.sql com o mesmo padrão regex original.
