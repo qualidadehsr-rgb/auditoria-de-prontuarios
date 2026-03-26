@@ -28,3 +28,5 @@ models:
         description: "Nome da coluna original que virou a pergunta após o UNPIVOT."
       - name: resposta
         description: "Conteúdo respondido no sistema antigo."
+  - name: stg_bronze_dim_perguntas
+    description: "Passthrough da tabela dim_perguntas. Dicionário oficial que mapeia códigos internos das perguntas para labels formatados exibidos no Looker Studio."
