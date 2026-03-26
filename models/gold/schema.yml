@@ -1,24 +1,51 @@
 version: 2
 models:
   - name: gold_auditorias_consolidadas
+    description: "Tabela consolidada final que une cabeçalho da auditoria, respostas e dicionário de perguntas. Consumida exclusivamente pelo Looker Studio."
     columns:
       - name: id_auditoria
+        description: "Identificador único da auditoria."
         tests:
           - not_null
       - name: data_submissao
+        description: "Data e hora do registro da auditoria."
         tests:
           - not_null
       - name: nome_empresa
+        description: "Unidade hospitalar onde a auditoria foi realizada."
         tests:
           - not_null
       - name: setor_avaliado
+        description: "Setor do hospital auditado."
+        tests:
+          - not_null
+      - name: tipo_avaliacao
+        description: "Categoria da auditoria (Clínico, Cirúrgico, Obstétrico, etc.)."
+        tests:
+          - not_null
+      - name: especialidade
+        description: "Especialidade médica do prontuário auditado."
         tests:
           - not_null
       - name: pergunta_formatada
+        description: "Texto da pergunta formatado para exibição no Looker Studio."
         tests:
           - not_null
       - name: resposta
+        description: "Resultado da avaliação do item auditado."
         tests:
           - accepted_values:
-              arguments: 
+              arguments:
                 values: ['Conforme', 'Não conforme', 'N/A']
+      - name: qtde_conforme
+        description: "Flag binária: 1 se resposta é Conforme, 0 caso contrário."
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 AND qtde_conforme <= 1"
+      - name: qtde_validos
+        description: "Flag binária: 1 se resposta é Conforme ou Não conforme, 0 caso contrário (N/A)."
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 AND qtde_conforme <= 1"
