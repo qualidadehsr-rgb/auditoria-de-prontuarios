@@ -6,16 +6,14 @@ sources:
     schema: prontuarios_dados
     tables:
       - name: bronze_respostas_web
-        description: Dados brutos do sistema Web. Cada linha é uma submissão de auditoria com UUID e payload JSON completo.
-        loaded_at_field: data_hora
+        description: "Dados brutos do sistema Web. Cada linha é uma submissão de auditoria com UUID e payload JSON completo."
+        config:
+          loaded_at_field: data_hora
       - name: bronze_legado_respostas
-        description: Espelho da planilha Google Sheets do sistema antigo. Mais de 600 colunas horizontais representando todas as perguntas do formulário.
-        loaded_at_field: Timestamp
+        description: "Espelho da planilha Google Sheets do sistema antigo. Mais de 600 colunas horizontais representando todas as perguntas do formulário."
+        config:
+          loaded_at_field: Timestamp
       - name: dim_perguntas
-        description: Dicionário oficial de perguntas. Mapeia o código interno (ex: Clinico_Id_NomeCompleto) para o label formatado exibido no Looker Studio.
+        description: "Dicionário oficial de perguntas. Mapeia o código interno (ex: Clinico_Id_NomeCompleto) para o label formatado exibido no Looker Studio."
       - name: configuracoes
-        description: Tabela de configuração com setores e especialidades disponíveis por empresa. Alimentada manualmente.
-      - name: bronze_respostas_web
-        description: Dados brutos do sistema Web. Cada linha é uma submissão de auditoria com UUID e payload JSON completo.
-      - name: bronze_legado_respostas
-        description: Espelho da planilha Google Sheets do sistema antigo. Mais de 600 colunas horizontais representando todas as perguntas do formulário.
+        description: "Tabela de configuração com setores e especialidades disponíveis por empresa. Alimentada manualmente."
