@@ -10,4 +10,5 @@ with source_data as(
     {% endfor %}
     from {{source('bronze', 'bronze_legado_respostas')}}
 )
+--SELECT * mantido intencionalmente: tabela legado com 600+ colunas dinâmicas que alimentam o unpivot
 select * from source_data
