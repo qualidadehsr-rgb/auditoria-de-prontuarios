@@ -11,10 +11,10 @@ with respostas_web as(
            nome_empresa,
            nome_avaliador,
            data_avaliacao,
-           coalesce(nullif(trim(setor_avaliado),''), 'Não informado') as setor_avaliado,
+           {{ clean_empty_string('setor_avaliado') }} as setor_avaliado,
            numero_atendimento,
            tipo_prontuario,
-           coalesce(nullif(trim(especialidade),''), 'Não informado') as especialidade,
+           {{ clean_empty_string('especialidade') }} as especialidade,
            tipo_avaliacao,
            'web' as origem_sistema
     from {{ref('stg_bronze_respostas_web')}}
@@ -25,10 +25,10 @@ respostas_legado as(
            nomeEmpresa as nome_empresa,
            nomeAvaliador as nome_avaliador,
            dataAvaliacao as data_avaliacao,
-           coalesce(nullif(trim(setorAvaliado),''), 'Não informado') as setor_avaliado,
+           {{ clean_empty_string('setorAvaliado') }} as setor_avaliado,
            numAtendimento as numero_atendimento,
            tipoProntuario as tipo_prontuario,
-           coalesce(nullif(trim(especialidade),''), 'Não informado') as especialidade,
+           {{ clean_empty_string('especialidade')}} as especialidade,
            tipoAvaliacao as tipo_avaliacao,
            'legado' as origem_sistema
     from {{ref('stg_bronze_legado_respostas')}}
