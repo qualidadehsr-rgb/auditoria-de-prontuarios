@@ -68,8 +68,8 @@ consolidado_final as(
            f.pergunta_formatada,
            f.resposta,
            REGEXP_REPLACE(COALESCE(f.observacao, 'Sem observações'), r'[0-9]{4,}','[CENSURADO]') as observacao,
-           case when f.resposta = 'Conforme' then 1 else 0 end as qtde_conforme,
-           case when f.resposta in ('Conforme', 'Não conforme') then 1 else 0 end as qtde_validos
+           {{ flag_conformidade('f.resposta') }} as qtde_conforme,
+           {{ flag_valido('f.resposta') }} as qtde_validos
     from fatos_com_nome as f
     left join resposta as r
     on f.id_auditoria = r.id_auditoria
