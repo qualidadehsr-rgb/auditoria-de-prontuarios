@@ -1,2 +1,6 @@
 {{config(materialized='view')}}
-select * from {{source('bronze', 'dim_perguntas')}}
+select codigo_base,
+       tipo_avaliacao,
+       tema_formatado,
+       pergunta_formatada
+from {{source('bronze', 'dim_perguntas')}}
