@@ -2,8 +2,10 @@ name: Carga automatica
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 10,16,22  * * *'
+  #schedule:
+  #  - cron: '0 10,16,22  * * *'
+  # Pipeline legado desativado em 29/03/2026 - auditores migraram para formulário web
+  # Mantido workflow_dispatch para execução manual caso necessário
 
 jobs:
   meu_robo_etl:
