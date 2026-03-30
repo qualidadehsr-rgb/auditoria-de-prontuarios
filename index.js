@@ -34,9 +34,28 @@ const BQ_BRONZE_WEB_TABLE_ID = 'bronze_respostas_web';
 
 //Configurando o servidor web (express)
 app.use(express.json()); //servidor lê os dados que o HTML enviar
+const helmet = require('helmet'); // adicionar headers de segurança
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://stackpath.bootstrapcdn.com"],
+      connectSrc: ["'self'","https://stackpath.bootstrapcdn.com"],
+    }
+  }
+}))
+//limitação de requisições por IP
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+                windowMs: 15 * 60 * 1000,
+                max: 100,
+                message: {message: 'Muitas requisições. Tente novamente em 15 minutos.'}
+});
+app.use(limiter);
 app.use(express.static('public')); //informa o servidor que os arquivos HTML e CSS ficaram em uma pasta 'public'
 
-// --- MIDDLEWARE DE OBSERVABILIDADE (LOGS ESTRUTURADOS) ---
+// --- OBSERVABILIDADE (LOGS ESTRUTURADOS) ---
 app.use((req, res, next) => {
   req.request_id = uuidv4(); // Injeta o ID único da requisição
   console.log(JSON.stringify({
@@ -144,4 +163,13 @@ app.post('/api/salvar-dados', async(req, res) => {
 
 //ligando o servidor na porta do servidor ou a 3000 localmente
   const PORT = process.env.PORT || 3000;
+  app.use((err, req, res, next) => {
+    console.error(JSON.stringify({
+      severity:'ERROR',
+      request_id: req.request_id,
+      message:'Erro não tratado',
+      error_detail:err.message
+    }));
+    res.status(500).json({message: 'Erro interno no servidor'});
+  });
   app.listen(PORT, () => {console.log(`Servidor rodando na porta ${PORT}`);});
