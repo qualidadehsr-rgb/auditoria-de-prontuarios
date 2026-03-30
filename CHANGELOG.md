@@ -10,6 +10,29 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+
+## [1.14.0] - 2026-03-30
+### Adicionado (Modelagem & Refatoração)
+- **Macros Reutilizáveis:** Criação de `clean_empty_string` (tratamento de campos vazios) e `flag_conformidade`/`flag_valido` (lógica binária de conformidade), eliminando código duplicado na Silver e Gold.
+- **UNPIVOT Dinâmico:** Substituição de 300+ colunas hardcoded no `stg_bronze_detalhes_respostas_legado.sql` por geração automática via Jinja (`adapter.get_columns_in_relation`), eliminando manutenção manual.
+- **ADR 0024:** Justificativa da escolha de Node.js + Express para ingestão web.
+- **ADR 0025:** Documentação da estrutura final de ambientes e credenciais após migração.
+
+### Alterado (Organização & Performance)
+- **Remoção de SELECT *:** Modelos de staging agora listam colunas explicitamente (exceto legado com 600+ colunas, justificado com comentário).
+- **Repositório Organizado:** Scripts SQL legados movidos para pasta `_deprecated/` com README explicativo.
+- **Source Freshness:** SLAs ajustados para ciclo mensal de auditoria (warn: 20 dias, error: 35 dias) e freshness movido para dentro do bloco config (compatibilidade dbt Cloud 2.0).
+- **Contratos de Dados:** Adicionados testes para tipo_avaliacao, especialidade, qtde_conforme e qtde_validos na camada Gold. Descriptions em todas as colunas da Silver e Gold.
+
+### Corrigido
+- **Mascaramento LGPD:** Restaurado REGEXP_REPLACE na camada Gold que foi perdido na migração para dbt.
+- **dbt Cloud:** Corrigido erro de parsing do freshness na versão 2.0-preview.
+
+### Segurança
+- **Rotação de Credenciais:** Chave exposta acidentalmente foi rotacionada. Render migrado para service account `aplicacao-formulario@comissao-prontuario`.
+- **Pipeline Legado:** Cron do GitHub Actions desativado (planilha não recebe mais dados).
+- **Projeto GCP Pessoal:** Projeto `auditoria-de-prontuarios` encerrado, tudo centralizado em `comissao-prontuario`.
+
 ## [1.13.0] - 2026-03-24
 ### Adicionado (Arquitetura & dbt)
 - **Transformação em Nuvem (dbt):** Implementação completa do pipeline de transformação utilizando o dbt (Data Build Tool) conectado ao BigQuery, substituindo transformações manuais por modelos SQL escaláveis.
