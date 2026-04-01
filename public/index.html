@@ -105,7 +105,8 @@
       document.getElementById('dataAvaliacao').max = `${anoAtual}-${mesAtual}-${diaAtual}`;
 
       // 2. Trava do Passado (Mínimo = 1º dia do mês anterior)
-      const dataMinima = new Date(dataAtual.getFullYear(), dataAtual.getMonth() - 1, 1);
+      const dataMinima = new Date(dataAtual);
+      dataMinima.setDate(dataMinima.getDate() - 60);
       const anoMin = dataMinima.getFullYear();
       const mesMin = String(dataMinima.getMonth() + 1).padStart(2, '0');
       const diaMin = String(dataMinima.getDate()).padStart(2, '0');
