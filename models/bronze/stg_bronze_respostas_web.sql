@@ -10,5 +10,5 @@ select id_submissao,
        json_value(conteudo_bruto, '$.numAtendimento') as numero_atendimento,
        json_value(conteudo_bruto, '$.tipoProntuario') as tipo_prontuario,
        json_value(conteudo_bruto, '$.especialidade') as especialidade,
-       json_value(conteudo_bruto, '$.tipoAvaliacao') as tipo_avaliacao
+       REGEXP_REPLACE(NORMALIZE(json_value(conteudo_bruto, '$.tipoAvaliacao'), NFD), r'\pM', '') as tipo_avaliacao
 from source_data
