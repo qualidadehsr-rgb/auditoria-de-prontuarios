@@ -10,6 +10,25 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.15.0] - 2026-04-02
+
+### Adicionado
+- **Script `atualiza_dicionario.py`:** Automatização da carga do dicionário de perguntas diretamente no BigQuery, eliminando o CSV intermediário e o processo manual.
+- **Google Secret Manager:** Credenciais da `dbt-orquestrador` migradas para cofre de secrets do GCP, eliminando dependência de arquivo `.env` local entre ambientes.
+- **ADR 0026:** Decisão de uso do Google Secret Manager para credenciais.
+- **ADR 0027:** Decisão de eliminar o CSV intermediário do fluxo do dicionário.
+
+### Corrigido
+- **Dicionário de perguntas:** Adicionadas 75 perguntas do tipo Obstétrico que estavam ausentes, causando `pergunta_formatada = NULL` na Gold.
+- **Staging `stg_bronze_detalhes_respostas_web`:** Normalização de acentos e substituição de `&` por `_` nos códigos de pergunta vindos do formulário web.
+- **Staging `stg_bronze_respostas_web`:** Normalização de acento no campo `tipo_avaliacao`.
+- **Inconsistência de encoding:** Padronizado padrão sem acento nos `codigo_base` — alinhando dados históricos (legado) e novos (formulário web).
+
+### Segurança
+- **IAM revisado:** Removido papel `Administrador do BigQuery` da `aplicacao-formulario`. Removido acesso da `robo-salva-planilha` (projeto encerrado) do projeto `comissao-prontuario`.
+- **Chaves órfãs deletadas:** `aplicacao-formulario` e `dbt-orquestrador` reduzidas a 1 chave ativa cada.
+- **Usuário de jobs adicionado:** `aplicacao-formulario` recebeu papel `Usuário de jobs do BigQuery` necessário para execução de queries.
+
 
 ## [1.14.0] - 2026-03-30
 ### Adicionado (Modelagem & Refatoração)
