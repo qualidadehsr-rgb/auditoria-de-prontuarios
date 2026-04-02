@@ -17,6 +17,8 @@ O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0
 - **Google Secret Manager:** Credenciais da `dbt-orquestrador` migradas para cofre de secrets do GCP, eliminando dependência de arquivo `.env` local entre ambientes.
 - **ADR 0026:** Decisão de uso do Google Secret Manager para credenciais.
 - **ADR 0027:** Decisão de eliminar o CSV intermediário do fluxo do dicionário.
+- **ADR 0028:** Política de retenção de dados — 10 anos para Bronze e Silver, custo estimado R$ 0,02/mês.
+- **`docs/matriz_acesso.md`:** Criado documento formal de matriz de acesso com service accounts, usuários e histórico de alterações.
 
 ### Corrigido
 - **Dicionário de perguntas:** Adicionadas 75 perguntas do tipo Obstétrico que estavam ausentes, causando `pergunta_formatada = NULL` na Gold.
