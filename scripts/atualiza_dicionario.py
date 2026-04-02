@@ -1,11 +1,17 @@
 import json
-import ast
+import logging
 import re
+
+import ast
 import unicodedata
 import pandas as pd
+
 from google.cloud import secretmanager
 from google.oauth2 import service_account
 from google.cloud import bigquery
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def buscar_credencial():
     projeto = 'comissao-prontuario'
@@ -75,6 +81,12 @@ def carregar_bigquery(df, credenciais):
     job.result()
 
 if __name__ == '__main__':
-    credencial = buscar_credencial()
-    df = gerar_dicionario()
-    carregar_bigquery(df, credencial)
+    logger.info(json.dumps({'evento': 'Iniciando atualizacao do dicionario...'}))
+    try:
+        credencial = buscar_credencial()
+        df = gerar_dicionario()
+        carregar_bigquery(df, credencial)
+        logger.info(json.dumps({'evento': 'Dicionario atual carregado no BigQuery!', 'quantidade_linhas': len(df)}))
+    except Exception as e:
+        logger.error(json.dumps({'evento': 'erro_atualizacao', 'erro': str(e)}))
+        raise
