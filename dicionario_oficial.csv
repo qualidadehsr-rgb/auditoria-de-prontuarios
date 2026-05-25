@@ -47,7 +47,6 @@ Clinico_EvolucaoEnf_InfoClara,Clinico,Evolução de enfermagem,"A evolução con
 Clinico_AnotacaoEnf_InfoClara,Clinico,Anotação de enfermagem,"A anotação do técnico de enfermagem possui precauções, dispositivos, acessos vasculares, registro de condutas realizadas durante o plantão (banho, mudança de decúbito, etc)? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
 Clinico_EvolucaoMedica_InfoClara,Clinico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
 Clinico_Eventos_Identificado,Clinico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? Se sim, inserir no campo de observações qual evento"
-Clinico_Eventos_Notificado,Clinico,Eventos adversos,Existe evidência de notificação em prontuário?
 Clinico_Alta_Sumario,Clinico,Sumário de Alta,Possui sumário de alta?
 Clinico_Alta_Orientacoes,Clinico,Sumário de Alta,Possui orientações de alta?
 Clinico_Alta_Especialidade,Clinico,Sumário de Alta,Qual a especialidade?
@@ -110,7 +109,6 @@ Cirurgico_AnotacaoEnf_InfoClara,Cirurgico,Anotação de enfermagem,"A anotação
 Cirurgico_EvolucaoMedica_InfoClara,Cirurgico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
 Cirurgico_PlanoCuidado_InfoRelevante,Cirurgico,Plano de cuidado paciente e família,Possui plano de cuidado paciente e família com informações relevantes?
 Cirurgico_Eventos_Identificado,Cirurgico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? caso responda sim, inserir no campo de observações qual evento"
-Cirurgico_Eventos_Notificado,Cirurgico,Eventos adversos,Foi notificado? Existe evidência de notificação em prontuário?
 Cirurgico_TCLE_Cirurgico,Cirurgico,TCLE Cirúrgico,"Aplicado termo de consentimento esclarecido para procedimento cirúrgico, com assinatura do profissional e paciente ou responsável?"
 Cirurgico_TCLE_Anestesico,Cirurgico,TCLE Anestésico,"Aplicado termo de consentimento esclarecido anestésico/sedação, com assinatura do profissional e paciente ou responsável?"
 Cirurgico_ConsultaPre_Registrada,Cirurgico,Consulta pré-anestésica,Consulta pré anestésica registrada?
@@ -172,7 +170,6 @@ Obstetrico_AnotacaoEnf_InfoClara,Obstétrico,Anotação de enfermagem,"A anotaç
 Obstetrico_EvolucaoMedica_InfoClara,Obstétrico,Evolução médica de admissão,"A evolução médica possui informações claras e concisas referente ao diagnóstico do paciente? Caso tenha identificado alguma não conformidade, inserir a informação no campo de observação."
 Obstetrico_PlanoCuidado_InfoRelevante,Obstétrico,Plano de cuidado paciente e família,Possui plano de cuidado paciente e família com informações relevantes?
 Obstetrico_Eventos_Identificado,Obstétrico,Eventos adversos,"Durante sua avaliação de prontuário foi identificado algum evento adverso? caso responda sim, inserir no campo de observações qual evento"
-Obstetrico_Eventos_Notificado,Obstétrico,Eventos adversos,Foi notificado? Existe evidência de notificação em prontuário?
 Obstetrico_TCLE_Obstetrico,Obstétrico,TCLE Cirúrgico,"Aplicado termo de consentimento esclarecido para procedimento cirúrgico, com assinatura do profissional e paciente ou responsável?"
 Obstetrico_TCLE_Anestesico,Obstétrico,TCLE Anestésico,"Aplicado termo de consentimento esclarecido anestésico/sedação, com assinatura do profissional e paciente ou responsável?"
 Obstetrico_ConsultaPre_Registrada,Obstétrico,Consulta pré-anestésica,Consulta pré anestésica registrada?
