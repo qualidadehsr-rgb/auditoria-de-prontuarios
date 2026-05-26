@@ -75,3 +75,4 @@ consolidado_final as(
     on f.id_auditoria = r.id_auditoria
 )
 select * from consolidado_final
+where pergunta_formatada is not null
