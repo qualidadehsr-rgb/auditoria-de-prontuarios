@@ -15,6 +15,14 @@ models:
         description: "Unidade hospitalar onde a auditoria foi realizada."
         tests:
           - not_null
+      - name: nome_avaliador
+        description: "Nome do auditor responsável pela avaliação"
+        tests:
+          - not_null
+      - name: data_avaliacao
+        description: "Data de admissão do paciente auditado"
+        tests:
+          - not_null
       - name: setor_avaliado
         description: "Setor do hospital auditado."
         tests:

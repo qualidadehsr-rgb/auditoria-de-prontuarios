@@ -59,6 +59,7 @@ consolidado_final as(
            r.data_submissao,
            r.nome_empresa,
            r.nome_avaliador,
+           r.data_avaliacao,
            r.setor_avaliado,
            r.especialidade,
            r.tipo_avaliacao,
