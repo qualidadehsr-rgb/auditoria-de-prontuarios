@@ -10,6 +10,13 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato baseia-se em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.16.0] - 2026-07-24
+
+### Adicionado
+- **Validação de Observação Obrigatória:** Implementada regra de negócio que exige o preenchimento do campo de observação sempre que uma pergunta do questionário for marcada como "Não conforme". Aplicada em dupla camada (Defesa em Profundidade):
+  - *Front-end:* Bloqueio visual em `Pagina2_Template.html`, destacando em vermelho as perguntas pendentes antes de permitir o envio.
+  - *Back-end:* Função `validarObservacoesObrigatorias` na rota `POST /api/salvar-dados`, garantindo a integridade do dado mesmo em requisições feitas fora do formulário (ex: chamadas diretas à API).
+
 ## [1.15.0] - 2026-04-02
 
 ### Adicionado
