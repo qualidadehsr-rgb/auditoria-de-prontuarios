@@ -123,6 +123,32 @@ app.get('/api/get-options', async(req, res) => {
 //API #2 ROTA PARA SALVAR
 //lista de requisitos para verificação antes de salvar no BQ
 
+// função para validação em perguntas "Não conforme"
+function validarObservacoesObrigatorias(dadosFormulario){
+  const perguntasSemObservacao = []; // array para guardar o prefixo das perguntas com problemas
+
+  // percorre todos os campos do formulário
+  for (const chave in dadosFormulario){
+    // duas condições verificadas: filtra só chaves que são respostas e dentre as respostas filtra as que são não conforme
+    if (chave.endsWith('_Resp') && dadosFormulario[chave] === 'Não conforme'){
+      // retira o prefixo e deixa apenas o nome da pergunta
+      const prefixo = chave.slice(0, -('_Resp'.length));
+      // monta o nome da chave de observação
+      const chaveObs = `${prefixo}_Obs`;
+      // busca o valor do campo de observação 
+      const observacao = dadosFormulario[chaveObs];
+
+      // verifica se o campo de observação esta vazio
+      if (!observacao || observacao.trim() === ''){
+        // adiciona o nome da pergunta na lista de problemas
+        perguntasSemObservacao.push(prefixo);
+      }
+    }
+  }
+
+  return perguntasSemObservacao;
+}
+
 app.post('/api/salvar-dados', async(req, res) => {
   try {
     const dadosFormulario = req.body; //usa o arquivo json do front-end
@@ -135,6 +161,17 @@ app.post('/api/salvar-dados', async(req, res) => {
           message: `Erro de validação: O campo ${campo} é obrigatório e não foi enviado!`});
         }
       }
+    // chama função de validação e guarda resultado
+    const perguntasSemObservacao = validarObservacoesObrigatorias(dadosFormulario);
+    // verifica se a lista esta vazia
+    if (perguntasSemObservacao.length > 0) {
+      // retorna erro de quem enviou o dado, a quantidade de perguntas com problemas e a lista dessas perguntas
+      return res.status(400).json({
+        message: `Erro de validação: existem ${perguntasSemObservacao.length} pergunta(s) marcada(s) como "Não conforme" sem observação preenchida.`,
+        perguntas: perguntasSemObservacao
+      });
+    }
+
     const idResposta = uuidv4(); //gera ID único para cada resposta
     const dataSubmissao = new Date().toISOString();
 
