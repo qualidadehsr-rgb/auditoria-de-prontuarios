@@ -67,16 +67,29 @@
       todasAsPerguntas.forEach(row => { row.classList.remove('unanswered'); });
       for (const pergunta of todasAsPerguntas) {
         const radios = pergunta.querySelectorAll('input[type="radio"]');
-        const algumaOpcaoMarcada = Array.from(radios).some(radio => radio.checked);
-        if (!algumaOpcaoMarcada) {
+        const radioMarcado = Array.from(radios).find(radio => radio.checked);
+        
+        if (!radioMarcado) {
           pergunta.classList.add('unanswered');
           if (!primeiraPerguntaNaoRespondida) {
             primeiraPerguntaNaoRespondida = pergunta;
           }
+          continue;
+        }
+
+        if (radioMarcado.value === 'Não conforme') {
+          const obsInput = pergunta.querySelector('.obs-input');
+          if (!obsInput.value.trim()) {
+            pergunta.classList.add('unanswered');
+            if (!primeiraPerguntaNaoRespondida) {
+              primeiraPerguntaNaoRespondida = pergunta;
+            }
+          }
+
         }
       }
       if (primeiraPerguntaNaoRespondida) {
-        alert('Por favor, responda todas as perguntas antes de salvar. As perguntas não respondidas estão destacadas em vermelho.');
+        alert('Por favor, responda todas as perguntas antes de salvar. Para respostas marcadas como "Não conforme", é obrigatório descrever o problema no campo de observação. As pendências estão destacadas em vermelho.');
         primeiraPerguntaNaoRespondida.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
